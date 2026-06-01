@@ -31,7 +31,7 @@ data class UserCreateDTO (
 fun UserCreateDTO.toEntity(hashedPassword: String): User {
     return User(
         id = 0,
-        NIF = this.nif,
+        nif = this.nif,
         name = this.name,
         surname = this.surname,
         email = this.email,

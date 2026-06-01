@@ -3,7 +3,7 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.54">
     <root id="1">
       <DateStyle>dmy</DateStyle>
-      <IntrospectionStateNumber>776</IntrospectionStateNumber>
+      <IntrospectionStateNumber>787</IntrospectionStateNumber>
       <ServerVersion>18.4</ServerVersion>
       <StartupTime>1780339348</StartupTime>
       <TimeZones>true ACDT
@@ -1399,7 +1399,7 @@ true posixrules
 13332||10|C|G
 13332||-9223372036854775808|U|G
 13332||10|U|G</Grants>
-      <IntrospectionStateNumber>776</IntrospectionStateNumber>
+      <IntrospectionStateNumber>787</IntrospectionStateNumber>
       <ObjectId>16388</ObjectId>
       <OwnerName>postgres</OwnerName>
     </database>
@@ -5433,11 +5433,11 @@ true posixrules
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <LastIntrospectionL1Xid>776</LastIntrospectionL1Xid>
-      <LastIntrospectionL2Xid>776</LastIntrospectionL2Xid>
-      <LastIntrospectionL3Xid>776</LastIntrospectionL3Xid>
+      <LastIntrospectionL1Xid>787</LastIntrospectionL1Xid>
+      <LastIntrospectionL2Xid>787</LastIntrospectionL2Xid>
+      <LastIntrospectionL3Xid>787</LastIntrospectionL3Xid>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2026-06-01.19:11:29</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2026-06-01.21:50:57</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>545</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
@@ -8905,7 +8905,7 @@ true posixrules
     <table id="524" parent="272" name="users">
       <DetailsLevel>2</DetailsLevel>
       <ObjectId>16390</ObjectId>
-      <StateNumber>769</StateNumber>
+      <StateNumber>780</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>postgres</OwnerName>
     </table>
@@ -8985,7 +8985,13 @@ true posixrules
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <index id="536" parent="524" name="users_pkey">
+    <column id="536" parent="524" name="photo_url">
+      <Position>11</Position>
+      <StateNumber>780</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <index id="537" parent="524" name="users_pkey">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16404</ObjectId>
@@ -8994,7 +9000,7 @@ true posixrules
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <index id="537" parent="524" name="uk11qq4rm29uk1c3na80wyu7s3v">
+    <index id="538" parent="524" name="uk11qq4rm29uk1c3na80wyu7s3v">
       <ColNames>nif</ColNames>
       <ObjectId>16406</ObjectId>
       <StateNumber>771</StateNumber>
@@ -9004,7 +9010,7 @@ true posixrules
       <CollationIds>100</CollationIds>
       <CollationParentNames>pg_catalog</CollationParentNames>
     </index>
-    <index id="538" parent="524" name="uk6dotkott2kjsp8vw4d0m25fb7">
+    <index id="539" parent="524" name="uk6dotkott2kjsp8vw4d0m25fb7">
       <ColNames>email</ColNames>
       <ObjectId>16408</ObjectId>
       <StateNumber>773</StateNumber>
@@ -9014,19 +9020,19 @@ true posixrules
       <CollationIds>100</CollationIds>
       <CollationParentNames>pg_catalog</CollationParentNames>
     </index>
-    <key id="539" parent="524" name="users_pkey">
+    <key id="540" parent="524" name="users_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16405</ObjectId>
       <Primary>1</Primary>
       <StateNumber>769</StateNumber>
       <UnderlyingIndexId>16404</UnderlyingIndexId>
     </key>
-    <key id="540" parent="524" name="uk11qq4rm29uk1c3na80wyu7s3v">
+    <key id="541" parent="524" name="uk11qq4rm29uk1c3na80wyu7s3v">
       <ObjectId>16407</ObjectId>
       <StateNumber>771</StateNumber>
       <UnderlyingIndexId>16406</UnderlyingIndexId>
     </key>
-    <key id="541" parent="524" name="uk6dotkott2kjsp8vw4d0m25fb7">
+    <key id="542" parent="524" name="uk6dotkott2kjsp8vw4d0m25fb7">
       <ObjectId>16409</ObjectId>
       <StateNumber>773</StateNumber>
       <UnderlyingIndexId>16408</UnderlyingIndexId>
