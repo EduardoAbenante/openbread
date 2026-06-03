@@ -227,17 +227,32 @@ class UserService(
      * @param id The ID of the user to deactivate.
      * @throws ResourceNotFoundException if the user does not exist.
      */
-    fun deleteUser(id: Long, currentUserId: Long) {
-        if (id == currentUserId) {
+    fun deleteUser(id: Long, currentUserEmail: String) {
+        val user = userRepository.findById(id)
+            .orElseThrow { ResourceNotFoundException("User with id $id not found") }
+
+        val mail = user.email
+
+        if (currentUserEmail == mail) {
             logger.warn("User $id attempted to delete themselves — operation blocked")
             throw IllegalArgumentException("You cannot delete your own account")
         }
 
+        user.active = false
+        userRepository.save(user)
+    }
+
+    fun activateUser(id: Long): Long{
         val user = userRepository.findById(id)
             .orElseThrow { ResourceNotFoundException("User with id $id not found") }
 
-        user.active = false
-        userRepository.save(user)
+        require(!user.active) { "User with id $id is already active" }
+
+        user.active = true
+        var saved = userRepository.save(user)
+
+        return saved.id
+
     }
 
 

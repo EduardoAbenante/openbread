@@ -78,9 +78,17 @@ class UserController(
         @PathVariable id: Long,
         authentication: Authentication
     ): ResponseEntity<Void> {
-        val currentUserId = authentication.principal as Long
-        userService.deleteUser(id, currentUserId)
+        val currentUserEmail = authentication.principal as String
+        userService.deleteUser(id, currentUserEmail)
         return ResponseEntity.noContent().build()
+    }
+
+    @PutMapping("/{id}/activate")
+    fun activateUser(
+        @PathVariable id: Long
+    ): ResponseEntity<Long> {
+        val activatedUser = userService.activateUser(id)
+        return ResponseEntity.ok(activatedUser)
     }
 
 

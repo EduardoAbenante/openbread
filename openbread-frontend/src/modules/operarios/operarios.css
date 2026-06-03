@@ -1,124 +1,335 @@
+/* ==========================================
+   ESTILOS GESTIÓN DE OPERARIOS (OpenBread 2026)
+   ========================================== */
+
+/* Componentes de Diseño y Layout */
+.ob-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.ob-toolbar button {
+  padding: 0 1.25rem;
+  height: 40px;
+  border-radius: 0.5rem;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.ob-toolbar button:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+/* Tabla Estilo SaaS Integrada con OpenBread */
+.ob-table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(123, 75, 42, 0.2); /* Borde un poco más definido */
+  background: var(--color-surface);
+}
+
 .ob-table {
   width: 100%;
   border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
 }
 
 .ob-table th {
-  background: var(--color-primary);
-  color: white;
-  padding: 0.8rem;
+  background: rgba(123, 75, 42, 0.08); /* Más oscura y con mejor contraste */
+  color: #5c3a21; /* Marrón más oscuro y legible */
+  font-weight: 700; /* Mayor peso visual */
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 1rem 1.25rem;
+  border-bottom: 2px solid rgba(123, 75, 42, 0.18); /* Línea divisoria más marcada */
+}
+
+.ob-table tbody tr {
+  border-bottom: 1px solid rgba(123, 75, 42, 0.08);
+  transition: background-color 0.15s ease;
+}
+
+.ob-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.ob-table tbody tr:hover {
+  background: rgba(123, 75, 42, 0.04); /* Hover ligeramente más perceptible */
 }
 
 .ob-table td {
-  padding: 0.8rem;
-  border-bottom: 1px solid var(--color-border);
+  padding: 1rem 1.25rem;
+  color: var(--color-text);
+  vertical-align: middle;
+}
+
+/* Estado / Badges con colores sólidos y alto contraste */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.65rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge.active {
+  background: #e6f4ea; /* Fondo sólido verde pastel */
+  color: #137333;      /* Texto verde oscuro de alta accesibilidad */
+}
+
+.badge.inactive {
+  background: #f1f3f4; /* Fondo sólido gris neutral */
+  color: #5f6368;      /* Texto gris oscuro */
+}
+
+/* Acciones y Botones Unificados */
+.ob-actions-cell {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }
 
 .ob-table button {
-  margin-right: 0.5rem;
+  height: 32px;
+  min-width: 82px; /* Ancho fijo unificado para simetría total */
+  padding: 0 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.815rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; /* Centrado perfecto de etiquetas */
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
 }
 
-.danger {
+.ob-table button.edit-button {
+  background: #fff;
+  color: var(--color-primary);
+  border: 1px solid rgba(123, 75, 42, 0.35); /* Borde más visible */
+}
+
+.ob-table button.edit-button:hover {
+  background: rgba(123, 75, 42, 0.08);
+  border-color: var(--color-primary);
+}
+
+.ob-table button.activate-button {
+  background: #3b6139; /* Verde más profundo para contrastar mejor con el texto blanco */
+  color: white;
+}
+
+.ob-table button.activate-button:hover {
+  background: #2d4a2b;
+}
+
+.ob-table button.danger {
+  background: #fce8e6; /* Fondo rojo suave pero sólido */
+  color: #c5221f;      /* Texto rojo intenso accesible */
+  border: 1px solid #fad2cf;
+}
+
+.ob-table button.danger:hover {
+  background: #c5221f;
+  color: white;
+  border-color: #c5221f;
+}
+
+.ob-modal-actions button.danger {
+  background: rgba(176, 0, 32, 0.05);
+  color: #b00020;
+  border: 1px solid rgba(176, 0, 32, 0.15);
+}
+
+.ob-modal-actions button.danger:hover {
   background: #b00020;
   color: white;
 }
 
+/* Modales Modernos */
 .ob-modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.4);
+  inset: 0;
+  background: rgba(40, 25, 15, 0.4); 
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 50;
+  padding: 1rem;
 }
 
 .ob-modal-content {
   background: var(--color-surface);
-  padding: 20px;
-  border-radius: 14px;
-  width: min(1340px, calc(100vw - 2rem));
-  max-width: 1340px;
-  max-height: 92vh;
+  padding: 2rem;
+  border-radius: 0.875rem;
+  width: 100%;
+  max-width: 1080px; 
+  max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 20px 25px -5px rgba(40, 25, 15, 0.15);
+}
+
+.ob-modal-header {
+  margin-bottom: 1.5rem;
+}
+
+.ob-modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.ob-error {
+  color: #b00020;
+  background: rgba(176, 0, 32, 0.05);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  margin-top: 0.75rem;
+}
+
+/* Formulario - PRESERVADO AL 100% */
+.ob-modal-form {
+  width: 100%;
+}
+
+.ob-form-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr; 
+  gap: 2.5rem;
+}
+
+@media (max-width: 768px) {
+  .ob-form-row {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.ob-form-left {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 1rem 1.25rem;
+}
+
+.ob-form-left label,
+.ob-form-left input,
+.ob-form-left select {
+  grid-column: span 2;
+}
+
+@media (min-width: 480px) {
+  .ob-form-left .half-field {
+    grid-column: span 1;
+  }
+}
+
+.ob-form-left label,
+.ob-form-right label {
+  font-weight: 500;
+  color: #475569;
+  font-size: 0.815rem;
+  margin-bottom: -0.5rem; 
+}
+
+.ob-form-left input,
+.ob-form-left select,
+.photo-upload-card input[type="file"] {
+  height: 38px;
+  padding: 0 0.85rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  width: 100%;
+}
+
+.ob-form-left input:focus,
+.ob-form-left select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(123, 75, 42, 0.15);
+}
+
+.ob-form-left input:disabled,
+.ob-form-left select:disabled {
+  background: #f8fafc;
+  color: #94a3b8;
+  border-color: var(--color-border);
+  cursor: not-allowed;
+}
+
+.ob-form-right {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  font-size: 0.92rem;
-  line-height: 1.42;
-  margin: 0 auto;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.photo-upload-card {
+  border: 1px dashed var(--color-border); 
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: rgba(0, 0, 0, 0.01);
+}
+
+.photo-preview {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  border-radius: 0.375rem;
+  border: 1px solid var(--color-border);
 }
 
 .ob-modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
-  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: auto; 
 }
 
-.ob-modal-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  max-width: 1340px;
-  margin: 0 auto;
-}
-
-/* contenedor horizontal de las dos columnas */
-.ob-form-row {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-  align-items: stretch;
+.ob-modal-actions button {
+  height: 38px;
+  padding: 0 1.5rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  width: 100%;
-  margin: 0 auto;
+  transition: all 0.15s ease;
 }
 
-.ob-form-left,
-.ob-form-right {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.ob-modal-actions button[type="submit"] {
+  background: var(--color-primary);
+  color: white;
+  border: none;
 }
 
-.ob-form-left {
-  flex: 2;
-  max-width: 560px;
-}
-
-.ob-form-right {
-  flex: 1.4;
-  max-width: 520px;
-  align-items: stretch;
-  justify-content: space-between;
-}
-
-.ob-form-left input,
-.ob-form-left select {
-  max-width: 100%;
-}
-
-.ob-form-right input[type="file"] {
-  width: 100%;
-}
-
-.ob-form-left label,
-.ob-form-right label {
-  font-weight: 600;
-  color: var(--color-text);
-  font-size: 0.95rem;
-}
-
-.photo-preview {
-  width: 100%;
-  max-width: 520px;
-  max-height: 560px;
-  object-fit: cover;
-  border-radius: 0.8rem;
-  border: 1px solid var(--color-border);
+.ob-modal-actions button[type="submit"]:hover {
+  background: var(--color-primary-dark);
 }

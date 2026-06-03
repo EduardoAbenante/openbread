@@ -4,10 +4,12 @@ import Card from "../../components/common/Card";
 import OperariosTable from "../../modules/operarios/OperariosTable";
 import OperariosForm from "../../modules/operarios/OperariosForm";
 import OperariosDeleteModal from "../../modules/operarios/OperariosDeleteModal";
+import OperariosActivateModal from "../../modules/operarios/OperariosActivateModal";
 import {
   getOperarios,
   createOperario,
   updateOperario,
+  activateOperario,
   deleteOperario
 } from "../../modules/operarios/OperariosApi";
 
@@ -15,6 +17,7 @@ export default function OperariosPage() {
   const [operarios, setOperarios] = useState([]);
   const [editing, setEditing] = useState(null);
   const [deleting, setDeleting] = useState(null);
+  const [activating, setActivating] = useState(null);
 
   const load = () => getOperarios().then(setOperarios);
 
@@ -35,17 +38,30 @@ export default function OperariosPage() {
     load();
   };
 
+  const handleActivateClick = (operario) => {
+    setActivating(operario);
+  };
+
+  const handleActivateConfirm = async () => {
+    await activateOperario(activating.id);
+    setActivating(null);
+    load();
+  };
+
   return (
     <Section title="Gestión de operarios">
       <Card>
-        <button onClick={() => setEditing({ nif: "", name: "", surname: "", phone: "", active: true })}>
-          Nuevo operario
-        </button>
+        <div className="ob-toolbar">
+          <button onClick={() => setEditing({ nif: "", name: "", surname: "", phone: "", active: true })}>
+            Nuevo operario
+          </button>
+        </div>
 
         <OperariosTable
           operarios={operarios}
           onEdit={setEditing}
           onDelete={setDeleting}
+          onActivate={handleActivateClick}
         />
       </Card>
 
@@ -62,6 +78,14 @@ export default function OperariosPage() {
           operario={deleting}
           onConfirm={handleDelete}
           onCancel={() => setDeleting(null)}
+        />
+      )}
+
+      {activating && (
+        <OperariosActivateModal
+          operario={activating}
+          onConfirm={handleActivateConfirm}
+          onCancel={() => setActivating(null)}
         />
       )}
     </Section>

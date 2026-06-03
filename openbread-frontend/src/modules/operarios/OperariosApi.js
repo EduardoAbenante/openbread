@@ -25,6 +25,11 @@ export const updateOperarioPassword = async (id, password) => {
   return res.data;
 };
 
+export const activateOperario = async (id) => {
+  const res = await api.put(`/user/${id}/activate`);
+  return res.data;
+};
+
 export const deleteOperario = async (id) => {
   await api.delete(`/user/${id}`);
 };
