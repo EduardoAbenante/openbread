@@ -1,5 +1,3 @@
-import "./operarios.css";
-
 export default function OperariosTable({ operarios, sortConfig, onSort, onEdit, onDelete, onActivate }) {
   
   const renderSortIcon = (key) => {
@@ -12,12 +10,24 @@ export default function OperariosTable({ operarios, sortConfig, onSort, onEdit, 
       <table className="ob-table">
         <thead>
           <tr>
-            <th className="sortable" onClick={() => onSort("nif")}>NIF {renderSortIcon("nif")}</th>
-            <th className="sortable" onClick={() => onSort("name")}>Nombre Completo {renderSortIcon("name")}</th>
-            <th className="sortable" onClick={() => onSort("email")}>Correo electrónico {renderSortIcon("email")}</th>
-            <th className="sortable" onClick={() => onSort("phone")}>Teléfono {renderSortIcon("phone")}</th>
-            <th>C.P.</th>
-            <th className="sortable" onClick={() => onSort("active")}>Estado {renderSortIcon("active")}</th>
+            <th className="sortable" onClick={() => onSort("nif")}>
+              NIF {renderSortIcon("nif")}
+            </th>
+            <th className="sortable" onClick={() => onSort("name")}>
+              Nombre Completo {renderSortIcon("name")}
+            </th>
+            <th className="sortable" onClick={() => onSort("email")}>
+              Correo electrónico {renderSortIcon("email")}
+            </th>
+            <th className="sortable" onClick={() => onSort("phone")}>
+              Teléfono {renderSortIcon("phone")}
+            </th>
+            <th className="sortable" onClick={() => onSort("postalCode")}>
+              C.P. {renderSortIcon("postalCode")}
+            </th>
+            <th className="sortable" onClick={() => onSort("active")}>
+              Estado {renderSortIcon("active")}
+            </th>
             <th style={{ textAlign: "right" }}>Acciones</th>
           </tr>
         </thead>

@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import Section from "../../components/common/Section";
 import Card from "../../components/common/Card";
 import OperariosTable from "../../modules/operarios/OperariosTable";
@@ -6,6 +6,7 @@ import OperariosForm from "../../modules/operarios/OperariosForm";
 import OperariosDeleteModal from "../../modules/operarios/OperariosDeleteModal";
 import OperariosActivateModal from "../../modules/operarios/OperariosActivateModal";
 import { Modal } from "../../components/common/Modal"; 
+import { useTableTools } from "../../hooks/useTableTools";
 import {
   getOperarios,
   createOperario,
@@ -22,70 +23,31 @@ export default function OperariosPage() {
   const [deleting, setDeleting] = useState(null);
   const [activating, setActivating] = useState(null);
 
-  // 1. ESTADO DE FILTROS (Mapeados con los RequestParam de tu backend en Kotlin)
-  const [filters, setFilters] = useState({
-    nif: "",
-    name: "",
-    email: "",
-    active: "" // Puede ser "", "true" o "false"
-  });
+  // Invocación del Custom Hook con los campos por los que el buscador "Smart Search" rastreará
+// Asegúrate de que el hook en OperariosPage consuma los nombres exactos de tu objeto de Kotlin:
+  const {
+    searchTerm,
+    setSearchTerm,
+    statusFilter,
+    setStatusFilter,
+    sortConfig,
+    handleSort,
+    processedData: filteredAndSortedOperarios
+  } = useTableTools(operarios, ["nif", "name", "email", "phone", "postalCode"]);
 
-  // 2. ESTADO DE ORDENACIÓN LOCAL (Atributo de la columna y dirección)
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-
-  // Función de carga conectada a la API que inyecta los filtros activos
+  // Carga inicial de datos de la API (Sin filtros en backend para delegar en el Smart Search del cliente)
   const load = async () => {
-    const queryParams = {};
-    Object.keys(filters).forEach((key) => {
-      if (filters[key] !== "") {
-        queryParams[key] = key === "active" ? filters[key] === "true" : filters[key];
-      }
-    });
-
     try {
-      const data = await getOperarios(queryParams);
+      const data = await getOperarios();
       setOperarios(data);
     } catch (error) {
-      console.error("Error al consultar los operarios filtrados:", error);
+      console.error("Error al consultar los operarios:", error);
     }
   };
 
-  // 3. EFFECT CON DEBOUNCE PARA LA BÚSQUEDA ASÍNCRONA
   useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      load();
-    }, 300);
-
-    return () => clearTimeout(delayDebounce);
-  }, [filters]);
-
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSort = (key) => {
-    let direction = "asc";
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
-    }
-    setSortConfig({ key, direction });
-  };
-
-  const sortedOperarios = useMemo(() => {
-    let sortableItems = [...operarios];
-    if (sortConfig.key !== null) {
-      sortableItems.sort((a, b) => {
-        const valA = a[sortConfig.key] ? a[sortConfig.key].toString().toLowerCase() : "";
-        const valB = b[sortConfig.key] ? b[sortConfig.key].toString().toLowerCase() : "";
-
-        if (valA < valB) return sortConfig.direction === "asc" ? -1 : 1;
-        if (valA > valB) return sortConfig.direction === "asc" ? 1 : -1;
-        return 0;
-      });
-    }
-    return sortableItems;
-  }, [operarios, sortConfig]);
+    load();
+  }, []);
 
   // Operaciones de persistencia CRUD
   const handleSave = async (data) => {
@@ -112,59 +74,46 @@ export default function OperariosPage() {
   };
 
   return (
-    <Section title="Gestión de operarios">
+    <Section title="Gestión de operarios">  
       
-      {/* BARRA DE FILTROS PREMIUM (Estilo SaaS 2026) */}
+      {/* --- PANEL DE FILTROS OPTIMIZADO (SMART SEARCH) --- */}
       <div className="ob-filters-panel">
-        <div className="ob-filter-group">
-          <label>Buscar NIF</label>
+        <div className="ob-filter-group" style={{ gridColumn: 'span 2' }}>
+          <label htmlFor="smartSearch">Búsqueda rápida</label>
           <input
+            id="smartSearch"
             type="text"
-            name="nif"
-            placeholder="Ej. 00000000A"
-            value={filters.nif}
-            onChange={handleFilterChange}
+            placeholder="Buscar por NIF, nombre, correo, teléfono o CP..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
+
         <div className="ob-filter-group">
-          <label>Nombre o Apellido</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="Buscar por nombre..."
-            value={filters.name}
-            onChange={handleFilterChange}
-          />
-        </div>
-        <div className="ob-filter-group">
-          <label>Correo electrónico</label>
-          <input
-            type="text"
-            name="email"
-            placeholder="Ej. admin@openbread..."
-            value={filters.email}
-            onChange={handleFilterChange}
-          />
-        </div>
-        <div className="ob-filter-group">
-          <label>Estado</label>
-          <select name="active" value={filters.active} onChange={handleFilterChange}>
-            <option value="">Todos los estados</option>
-            <option value="true">Activos</option>
-            <option value="false">Inactivos</option>
+          <label htmlFor="statusFilter">Estado</label>
+          <select
+            id="statusFilter"
+            value={statusFilter} 
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="all">Todos los estados</option>
+            <option value="active">Activos</option>
+            <option value="inactive">Inactivos</option>
           </select>
         </div>
       </div>
 
+      {/* --- CONTENEDOR PRINCIPAL --- */}
       <Card>
         <div className="ob-toolbar">
-          <button onClick={() => setEditing({ nif: "", name: "", surname: "", phone: "", active: true })}>
+          <button onClick={() => setEditing({ nif: "", nombre: "", apellido: "", email: "", telefono: "", cp: "", activo: true })}>
             Nuevo operario
           </button>
         </div>
 
+        {/* Le inyectamos los datos procesados, la configuración y el manejador del hook */}
         <OperariosTable
-          operarios={sortedOperarios}
+          operarios={filteredAndSortedOperarios}
           sortConfig={sortConfig}
           onSort={handleSort}
           onEdit={setEditing}
@@ -173,10 +122,7 @@ export default function OperariosPage() {
         />
       </Card>
 
-      {/* ==========================================================================
-          MODALES ENVOLTORIO PROTEGIDOS CONTRA RENDERIZADOS NULOS
-          ========================================================================== */}
-      
+      {/* --- MODALES DE ACCIÓN PROTEGIDOS --- */}
       <Modal isOpen={Boolean(editing)}>
         {editing && (
           <OperariosForm
