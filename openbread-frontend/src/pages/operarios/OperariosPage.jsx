@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Section from "../../components/common/Section";
 import Card from "../../components/common/Card";
 import OperariosTable from "../../modules/operarios/OperariosTable";
@@ -17,14 +17,15 @@ import {
 
 export default function OperariosPage() {
   const [operarios, setOperarios] = useState([]);
+  const [loading, setLoading] = useState(false);
   
   // Estados para el control de ventanas modales
   const [editing, setEditing] = useState(null);
   const [deleting, setDeleting] = useState(null);
   const [activating, setActivating] = useState(null);
 
-  // Invocación del Custom Hook con los campos por los que el buscador "Smart Search" rastreará
-// Asegúrate de que el hook en OperariosPage consuma los nombres exactos de tu objeto de Kotlin:
+  // El Hook ahora SOLO se encarga de la ordenación de columnas en el cliente.
+  // Pasamos un array vacío [] porque los campos de filtrado ya los procesa el Backend.
   const {
     searchTerm,
     setSearchTerm,
@@ -32,27 +33,59 @@ export default function OperariosPage() {
     setStatusFilter,
     sortConfig,
     handleSort,
-    processedData: filteredAndSortedOperarios
-  } = useTableTools(operarios, ["nif", "name", "email", "phone", "postalCode"]);
+    processedData: sortedOperarios
+  } = useTableTools(operarios, []);
 
-  // Carga inicial de datos de la API (Sin filtros en backend para delegar en el Smart Search del cliente)
-  const load = async () => {
+  // Función de carga conectada al backend unificado (Smart Search remoto)
+  const load = useCallback(async () => {
+    setLoading(true);
+    const queryParams = {};
+    
+    // Si hay texto en el buscador, lo mandamos al parámetro unificado 'search'
+    if (searchTerm.trim() !== "") {
+      queryParams.search = searchTerm.trim();
+    }
+    
+    // Mapeamos el selector al parámetro dinámico 'active'
+    if (statusFilter === "active") queryParams.active = true;
+    if (statusFilter === "inactive") queryParams.active = false;
+
     try {
-      const data = await getOperarios();
+      // Consume el endpoint: /user/users?search=...&active=...
+      const data = await getOperarios(queryParams);
       setOperarios(data);
     } catch (error) {
-      console.error("Error al consultar los operarios:", error);
+      console.error("Error al consultar los operarios en OpenBread:", error);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [searchTerm, statusFilter]);
 
+  // EFFECT CON DEBOUNCE: Espera 300ms desde que el usuario deja de escribir antes de llamar a la API
   useEffect(() => {
-    load();
-  }, []);
+    const delayDebounce = setTimeout(() => {
+      load();
+    }, 300);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchTerm, statusFilter, load]);
 
   // Operaciones de persistencia CRUD
   const handleSave = async (data) => {
-    if (data.id) await updateOperario(data.id, data);
-    else await createOperario(data);
+    // Aseguramos que el mapeo interno coincida con el backend al crear/editar
+    const payload = {
+      id: data.id,
+      nif: data.nif,
+      name: data.name || data.nombre,
+      surname: data.surname || data.apellido,
+      email: data.email,
+      phone: data.phone || data.telefono,
+      postalCode: data.postalCode || data.cp,
+      active: data.active
+    };
+
+    if (payload.id) await updateOperario(payload.id, payload);
+    else await createOperario(payload);
     setEditing(null);
     load();
   };
@@ -76,7 +109,7 @@ export default function OperariosPage() {
   return (
     <Section title="Gestión de operarios">  
       
-      {/* --- PANEL DE FILTROS OPTIMIZADO (SMART SEARCH) --- */}
+      {/* --- PANEL DE FILTROS OPTIMIZADO (SMART SEARCH REMOTO) --- */}
       <div className="ob-filters-panel">
         <div className="ob-filter-group" style={{ gridColumn: 'span 2' }}>
           <label htmlFor="smartSearch">Búsqueda rápida</label>
@@ -106,20 +139,25 @@ export default function OperariosPage() {
       {/* --- CONTENEDOR PRINCIPAL --- */}
       <Card>
         <div className="ob-toolbar">
-          <button onClick={() => setEditing({ nif: "", nombre: "", apellido: "", email: "", telefono: "", cp: "", activo: true })}>
+          <button onClick={() => setEditing({ nif: "", name: "", surname: "", email: "", phone: "", postalCode: "", active: true })}>
             Nuevo operario
           </button>
         </div>
 
-        {/* Le inyectamos los datos procesados, la configuración y el manejador del hook */}
-        <OperariosTable
-          operarios={filteredAndSortedOperarios}
-          sortConfig={sortConfig}
-          onSort={handleSort}
-          onEdit={setEditing}
-          onDelete={setDeleting}
-          onActivate={handleActivateClick}
-        />
+        {loading ? (
+          <div style={{ textAlign: "center", padding: "2.5rem", color: "var(--color-primary)", fontWeight: 500 }}>
+            Filtrando en servidor...
+          </div>
+        ) : (
+          <OperariosTable
+            operarios={sortedOperarios}
+            sortConfig={sortConfig}
+            onSort={handleSort}
+            onEdit={setEditing}
+            onDelete={setDeleting}
+            onActivate={handleActivateClick}
+          />
+        )}
       </Card>
 
       {/* --- MODALES DE ACCIÓN PROTEGIDOS --- */}

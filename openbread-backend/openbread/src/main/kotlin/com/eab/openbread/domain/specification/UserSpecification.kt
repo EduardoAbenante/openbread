@@ -13,19 +13,18 @@ object UserSpecification {
     fun smartSearch(search: String?): Specification<User> {
         return Specification<User> { root, _, cb ->
             if (search.isNullOrBlank()) {
-                cb.conjunction() // Equivale a un "WHERE 1=1" (no filtra nada)
+                cb.conjunction()
             } else {
-                val searchTerm = "%${search.trim().lowercase()}%"
+                // Pasamos el patrón limpio a minúsculas, sin los % de Kotlin
+                val queryLower = cb.literal("%${search.trim().lowercase()}%")
 
-                // Creamos los predicados parciales (LIKE) para cada columna
-                val pNif = cb.like(cb.lower(root.get("nif")), searchTerm)
-                val pName = cb.like(cb.lower(root.get("name")), searchTerm)
-                val pSurname = cb.like(cb.lower(root.get("surname")), searchTerm)
-                val pEmail = cb.like(cb.lower(root.get("email")), searchTerm)
-                val pPhone = cb.like(cb.lower(root.get("phone")), searchTerm)
-                val pPostalCode = cb.like(cb.lower(root.get("postalCode")), searchTerm)
+                val pNif = cb.like(cb.lower(root.get("nif")), queryLower)
+                val pName = cb.like(cb.lower(root.get("name")), queryLower)
+                val pSurname = cb.like(cb.lower(root.get("surname")), queryLower)
+                val pEmail = cb.like(cb.lower(root.get("email")), queryLower)
+                val pPhone = cb.like(cb.lower(root.get("phone")), queryLower)
+                val pPostalCode = cb.like(cb.lower(root.get("postalCode")), queryLower)
 
-                // Los combinamos todos con un operador lógico OR
                 cb.or(pNif, pName, pSurname, pEmail, pPhone, pPostalCode)
             }
         }

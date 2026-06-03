@@ -17,22 +17,24 @@ export function useTableTools(initialData = [], searchFields = []) {
     setSortConfig({ key, direction });
   };
 
-  // Procesamiento combinado: Filtrado + Ordenación (Memoizado)
+  // Procesamiento combinado: Filtrado Opcional + Ordenación (Memoizado)
   const processedData = useMemo(() => {
     let result = [...initialData];
 
-    // 1. Filtrado por Estado (Activo / Inactivo)
-    if (statusFilter !== "all") {
+    // 1. FILTRADO POR ESTADO (Solo actúa si no se está filtrando ya en Backend)
+    // Como para Operarios lo filtramos en Kotlin, esto se vuelve inocuo o de apoyo.
+    if (statusFilter !== "all" && (!searchFields || searchFields.length === 0)) {
       const targetStatus = statusFilter === "active";
       result = result.filter(item => {
-        // Soporta tanto 'activo' como 'active' según mapee tu backend
-        const itemStatus = item.activo !== undefined ? item.activo : item.active;
+        const itemStatus = item.active !== undefined ? item.active : item.activo;
         return itemStatus === targetStatus;
       });
     }
 
-    // 2. Filtro "Smart Search" (Busca el término en cualquiera de los campos configurados)
-    if (searchTerm.trim() !== "") {
+    // 2. FILTRO "SMART SEARCH" EN CLIENTE (¡EL ARREGLO CRUCIAL!)
+    // Añadimos la condición 'searchFields.length > 0'. 
+    // Si el array viene vacío (porque busca el backend), salta este bloque sin destruir los datos.
+    if (searchTerm.trim() !== "" && searchFields && searchFields.length > 0) {
       const target = searchTerm.toLowerCase().trim();
       result = result.filter(item => 
         searchFields.some(field => {
@@ -42,13 +44,14 @@ export function useTableTools(initialData = [], searchFields = []) {
       );
     }
 
-    // 3. Ordenación Avanzada (C.P., Textos, Números)
+    // 3. ORDENACIÓN AVANZADA LOCAL
+    // Esto se mantiene intacto y óptimo: ordena cualquier columna cliqueada al instante
     if (sortConfig.key !== null) {
       result.sort((a, b) => {
         let valA = a[sortConfig.key];
         let valB = b[sortConfig.key];
 
-        // Normalización si son textos para evitar problemas con mayúsculas/tildes
+        // Normalización para strings (evita fallos con mayúsculas/minúsculas)
         if (typeof valA === "string") valA = valA.toLowerCase();
         if (typeof valB === "string") valB = valB.toLowerCase();
 
@@ -62,7 +65,7 @@ export function useTableTools(initialData = [], searchFields = []) {
     }
 
     return result;
-  }, [initialData, searchTerm, statusFilter, sortConfig]);
+  }, [initialData, searchTerm, statusFilter, sortConfig, searchFields]);
 
   return {
     searchTerm,
