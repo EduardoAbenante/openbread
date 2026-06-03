@@ -36,14 +36,89 @@
 }
 
 .ob-modal-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 0.8rem;
-  width: 400px;
+  background: var(--color-surface);
+  padding: 20px;
+  border-radius: 14px;
+  width: min(1340px, calc(100vw - 2rem));
+  max-width: 1340px;
+  max-height: 92vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 0.92rem;
+  line-height: 1.42;
+  margin: 0 auto;
 }
 
 .ob-modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ob-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 1340px;
+  margin: 0 auto;
+}
+
+/* contenedor horizontal de las dos columnas */
+.ob-form-row {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  align-items: stretch;
+  justify-content: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.ob-form-left,
+.ob-form-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ob-form-left {
+  flex: 2;
+  max-width: 560px;
+}
+
+.ob-form-right {
+  flex: 1.4;
+  max-width: 520px;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+.ob-form-left input,
+.ob-form-left select {
+  max-width: 100%;
+}
+
+.ob-form-right input[type="file"] {
+  width: 100%;
+}
+
+.ob-form-left label,
+.ob-form-right label {
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: 0.95rem;
+}
+
+.photo-preview {
+  width: 100%;
+  max-width: 520px;
+  max-height: 560px;
+  object-fit: cover;
+  border-radius: 0.8rem;
+  border: 1px solid var(--color-border);
 }

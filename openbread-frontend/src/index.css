@@ -57,6 +57,30 @@ body {
   background-color: var(--color-bg);
 }
 
+input,
+textarea,
+select {
+  font: inherit;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  color: var(--color-text);
+  padding: 0.9rem 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 3px solid rgba(123, 75, 42, 0.24);
+  outline-offset: 2px;
+}
+
+button {
+  font: inherit;
+}
+
 #root {
   width: 100%;
   margin: 0;
