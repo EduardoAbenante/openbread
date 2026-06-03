@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { login } from "../../api/authApi";
 import { useAuthStore } from "../../store/authStore";
+import { useNavigate } from "react-router-dom"
 import "./login.css";
 
 export default function LoginPage() {
   const setToken = useAuthStore((state) => state.setToken);
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -14,6 +16,7 @@ export default function LoginPage() {
     try {
       const token = await login(email, password);
       setToken(token);
+      navigate("/app/dashboard");
     } catch {
       setError("Credenciales incorrectas");
     }

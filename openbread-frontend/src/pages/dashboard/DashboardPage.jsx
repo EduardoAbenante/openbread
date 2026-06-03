@@ -1,8 +1,32 @@
+import Card from "../../components/layout/common/Card";
+import Grid from "../../components/layout/common/Grid";
+import Section from "../../components/layout/common/Section";
+import "./dashboard.css";
+
 export default function DashboardPage() {
   return (
-    <div>
-      <h2>Dashboard</h2>
-      <p>Bienvenido al ERP OpenBread.</p>
+    <div className="dashboard-container">
+      <Section title="Resumen general">
+        <Grid columns={3}>
+          <Card title="Operarios activos">
+            <p> 12 operatios </p>
+          </Card>
+
+          <Card title="Clientes registrados">
+            <p> 58 clientes </p>
+          </Card>
+
+          <Card title="Productos en catálogo">
+            <p> 143 productos</p>
+          </Card>
+        </Grid>
+      </Section>
+
+      <Section title="Actividad reciente">
+        <Card>
+          <p> PLACEHOLDER</p>
+        </Card>
+      </Section>
     </div>
-  );
+  )
 }
