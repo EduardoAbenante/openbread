@@ -1,7 +1,10 @@
 import { useState } from "react";
 
 export default function OperariosForm({ initial, onSubmit, onCancel }) {
-  const [form, setForm] = useState(initial);
+  const [form, setForm] = useState({
+    ...initial,
+    role: initial.role || "USER",   // 👈 Garantiza que role SIEMPRE existe
+  });
 
   const update = (field, value) =>
     setForm({ ...form, [field]: value });
@@ -9,13 +12,15 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
   return (
     <div className="ob-modal">
       <div className="ob-modal-content">
-        <h2>{initial.id ? "Editar operario" : "Nuevo operario"}</h2>
+        <h2>{initial.id ? "Editar usuario" : "Nuevo usuario"}</h2>
 
+        {/* NIF (no editable en edición) */}
         <input
           value={form.nif}
           onChange={(e) => update("nif", e.target.value)}
           placeholder="NIF"
           required
+          disabled={!!initial.id}
         />
 
         <input
@@ -32,17 +37,20 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
           required
         />
 
+        {/* Email (no editable en edición) */}
         <input
           value={form.email}
           onChange={(e) => update("email", e.target.value)}
           placeholder="Correo electrónico"
           required
+          disabled={!!initial.id}
         />
 
+        {/* Password solo en creación */}
         {!initial.id && (
           <input
             type="password"
-            value={form.password}
+            value={form.password || ""}
             onChange={(e) => update("password", e.target.value)}
             placeholder="Contraseña"
             required
@@ -67,14 +75,15 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
           placeholder="URL foto"
         />
 
-        <label>
-          <input
-            type="checkbox"
-            checked={form.active}
-            onChange={(e) => update("active", e.target.checked)}
-          />
-          Activo
-        </label>
+        {/* Selector de rol (obligatorio en creación y edición) */}
+        <select
+          value={form.role}
+          onChange={(e) => update("role", e.target.value)}
+          required
+        >
+          <option value="USER">Usuario estándar</option>
+          <option value="ADMIN">Administrador</option>
+        </select>
 
         <div className="ob-modal-actions">
           <button onClick={() => onSubmit(form)}>Guardar</button>
