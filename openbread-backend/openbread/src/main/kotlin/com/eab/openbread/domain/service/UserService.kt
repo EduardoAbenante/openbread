@@ -13,6 +13,7 @@ import com.eab.openbread.web.dto.user.toEntity
 import jakarta.validation.constraints.Email
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -94,19 +95,13 @@ class UserService(
      *
      * @return A list of users matching the provided filters.
      */
-    fun findUsers(
-        nif: String?,
-        name: String?,
-        surname: String?,
-        email: String?,
-        phone: String?,
-        postalCode: String?,
-        active: Boolean?,
-    ): List<User>{
-        logger.info("Searching users with filters: nif=$nif, name=$name, surname=$surname, email=$email, phone=$phone, postalCode=$postalCode, active=$active")
-        val spec = UserSpecification.build(
-            nif,name,surname,email,phone,postalCode,active
-        )
+    fun findUsers(search: String?, active: Boolean?): List<User> {
+        logger.info("Searching users with Smart Search: query='$search', active=$active")
+
+        // Combinamos las especificaciones con un AND lógico
+        val spec = Specification
+            .where(UserSpecification.smartSearch(search))
+            .and(UserSpecification.withActiveStatus(active))
 
         return userRepository.findAll(spec)
     }

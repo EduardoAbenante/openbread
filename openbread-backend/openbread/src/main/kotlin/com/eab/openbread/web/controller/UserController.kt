@@ -34,15 +34,10 @@ class UserController(
 
     @GetMapping("/users")
     fun findUsers(
-        @RequestParam(required = false) nif: String?,
-        @RequestParam(required = false) name: String?,
-        @RequestParam(required = false) surname: String?,
-        @RequestParam(required = false) email: String?,
-        @RequestParam(required = false) phone: String?,
-        @RequestParam(required = false) postalCode: String?,
+        @RequestParam(required = false) search: String?,
         @RequestParam(required = false) active: Boolean?
     ): ResponseEntity<List<User>> {
-        val users = userService.findUsers(nif, name, surname, email, phone, postalCode, active)
+        val users = userService.findUsers(search, active)
         return ResponseEntity.ok(users)
     }
 
