@@ -1,6 +1,6 @@
-import Card from "../../components/layout/common/Card";
-import Grid from "../../components/layout/common/Grid";
-import Section from "../../components/layout/common/Section";
+import Card from "../../components/common/Card";
+import Grid from "../../components/common/Grid";
+import Section from "../../components/common/Section";
 import "./dashboard.css";
 
 export default function DashboardPage() {
