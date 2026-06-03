@@ -1,6 +1,7 @@
 import Card from "../../components/common/Card";
 import Grid from "../../components/common/Grid";
 import Section from "../../components/common/Section";
+import OperariosWidget from "../../modules/operarios/OperariosWidget";
 import "./dashboard.css";
 
 export default function DashboardPage() {
@@ -8,9 +9,7 @@ export default function DashboardPage() {
     <div className="dashboard-container">
       <Section title="Resumen general">
         <Grid columns={3}>
-          <Card title="Operarios activos">
-            <p> 12 operatios </p>
-          </Card>
+          <OperariosWidget />
 
           <Card title="Clientes registrados">
             <p> 58 clientes </p>
