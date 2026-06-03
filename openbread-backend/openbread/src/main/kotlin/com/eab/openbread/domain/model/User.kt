@@ -13,29 +13,29 @@ class User(
     val nif: String,
 
     @Column(nullable = false)
-    val name: String,
+    var name: String,
 
     @Column(nullable = false)
-    val surname: String,
+    var surname: String,
 
     @Column(nullable = false, unique = true)
     val email: String,
 
     @Column(nullable = false)
-    val password: String,
+    var password: String,
 
-    val phone: String? = null,
+    var phone: String? = null,
 
-    val postalCode: String? = null,
+    var postalCode: String? = null,
 
-    val photoUrl: String? = null,
+    var photoUrl: String? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val role: Role,
+    var role: Role,
 
     @Column(nullable = false)
-    val active: Boolean = true
+    var active: Boolean = true
 )
 
 enum class Role {
