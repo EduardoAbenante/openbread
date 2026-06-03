@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ImageUploadZone } from '../../components/common/ImageUploadZone';
 
 export default function OperariosForm({ initial, onSubmit, onCancel }) {
   const [form, setForm] = useState({
@@ -82,20 +83,19 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
             </div>
 
             <div className="ob-form-right">
-              <div className="photo-upload-card">
-                <label htmlFor="op-photo">Foto de perfil</label>
-                <input id="op-photo" type="file" accept="image/*" onChange={(e) => update("photoFile", e.target.files[0])} />
-                {form.photoFile && (
-                  <img src={URL.createObjectURL(form.photoFile)} className="photo-preview" alt="Preview" />
-                )}
-              </div>
+    
+              <ImageUploadZone 
+                label="Foto de perfil"
+                selectedFile={form.photoFile}
+                existingImageUrl={form.avatarUrl} 
+                onFileChange={(file) => update("photoFile", file)}
+              />
 
               <div className="ob-modal-actions">
                 <button type="button" className="danger" onClick={onCancel}>Cancelar</button>
                 <button type="submit">Guardar operario</button>
               </div>
             </div>
-
           </div>
         </form>
       </div>
