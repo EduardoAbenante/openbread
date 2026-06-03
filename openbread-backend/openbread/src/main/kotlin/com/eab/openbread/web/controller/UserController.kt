@@ -32,7 +32,7 @@ class UserController(
         return ResponseEntity.ok(newUserId)
     }
 
-    @GetMapping()
+    @GetMapping("/users")
     fun findUsers(
         @RequestParam(required = false) nif: String?,
         @RequestParam(required = false) name: String?,

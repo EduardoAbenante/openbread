@@ -15,24 +15,56 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
           value={form.nif}
           onChange={(e) => update("nif", e.target.value)}
           placeholder="NIF"
+          required
         />
 
         <input
           value={form.name}
           onChange={(e) => update("name", e.target.value)}
           placeholder="Nombre"
+          required
         />
 
         <input
           value={form.surname}
           onChange={(e) => update("surname", e.target.value)}
           placeholder="Apellidos"
+          required
         />
 
         <input
-          value={form.phone}
+          value={form.email}
+          onChange={(e) => update("email", e.target.value)}
+          placeholder="Correo electrónico"
+          required
+        />
+
+        {!initial.id && (
+          <input
+            type="password"
+            value={form.password}
+            onChange={(e) => update("password", e.target.value)}
+            placeholder="Contraseña"
+            required
+          />
+        )}
+
+        <input
+          value={form.phone || ""}
           onChange={(e) => update("phone", e.target.value)}
           placeholder="Teléfono"
+        />
+
+        <input
+          value={form.postalCode || ""}
+          onChange={(e) => update("postalCode", e.target.value)}
+          placeholder="Código postal"
+        />
+
+        <input
+          value={form.photoUrl || ""}
+          onChange={(e) => update("photoUrl", e.target.value)}
+          placeholder="URL foto"
         />
 
         <label>

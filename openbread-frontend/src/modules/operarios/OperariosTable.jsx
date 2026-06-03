@@ -10,7 +10,9 @@ export default function OperariosTable({ operarios, onEdit, onDelete }) {
           <th>NIF</th>
           <th>Nombre</th>
           <th>Apellidos</th>
+          <th>Correo electrónico</th>
           <th>Teléfono</th>
+          <th>Código postal</th>
           <th>Activo</th>
           <th>Acciones</th>
         </tr>
@@ -22,13 +24,13 @@ export default function OperariosTable({ operarios, onEdit, onDelete }) {
             <td>{op.nif}</td>
             <td>{op.name}</td>
             <td>{op.surname}</td>
+            <td>{op.email}</td>
             <td>{op.phone}</td>
+            <td>{op.postalCode}</td>
             <td>{op.active ? "Sí" : "No"}</td>
             <td>
               <button onClick={() => onEdit(op)}>Editar</button>
-              <button className="danger" onClick={() => onDelete(op)}>
-                Eliminar
-              </button>
+              <button className="danger" onClick={() => onDelete(op)}>Eliminar</button>
             </td>
           </tr>
         ))}

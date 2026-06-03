@@ -1,0 +1,64 @@
+GET http://localhost:8080/user/users?nif&name&surname&email&phone&postalCode&active
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=0474AF260BD2A7E16BD68D9A576C3EFA
+
+###
+
+GET http://localhost:8080/user/users?nif=null&name=null&surname=null&email=null&phone=null&postalCode=null&active=null
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=0474AF260BD2A7E16BD68D9A576C3EFA
+
+###
+
+GET http://localhost:8080/user/users?nif&name&surname&email&phone&postalCode&active
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=0474AF260BD2A7E16BD68D9A576C3EFA
+
+###
+
+GET http://localhost:8080/user/users?nif=null&name=null&surname=null&email=null&phone=null&postalCode=null&active=null
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=0474AF260BD2A7E16BD68D9A576C3EFA
+
+###
+
+GET http://localhost:8080/user/users?nif&name&surname&email&phone&postalCode&active
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=0474AF260BD2A7E16BD68D9A576C3EFA
+
+###
+
+GET http://localhost:8080/user/users?nif={}&name={}&surname=JzQDX7mI&email=YIgmBTuy&phone=TpRa2RbA&postalCode=lwPCLkfj&active=false
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=0474AF260BD2A7E16BD68D9A576C3EFA
+
+###
+
+GET http://localhost:8080/user/users?nif=l5z_dL8g&name=xkxYG1eL&surname=2ozkGZ3E&email=4psfqsba&phone=zgdKxbv8&postalCode=XjUVmwkv&active=false
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=0474AF260BD2A7E16BD68D9A576C3EFA
+
+###
+
+POST http://localhost:8080/user?nif=98Y8S3rC&name=3bDGxoKB&surname=obxDrCPU&email=J2OFgGD0&phone=zY4o41wh&postalCode=IEkF86uN&active=falseContent-Type: application/json
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+###
+

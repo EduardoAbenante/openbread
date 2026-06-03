@@ -6,6 +6,7 @@ export default function Sidebar() {
       <h2>OpenBread</h2>
       <nav>
         <NavLink to="/app/dashboard">Dashboard</NavLink>
+        <NavLink to="/app/operarios">Operarios</NavLink>
       </nav>
     </aside>
   );

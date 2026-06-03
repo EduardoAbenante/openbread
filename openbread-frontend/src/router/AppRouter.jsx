@@ -3,6 +3,8 @@ import { useAuthStore } from "../store/authStore";
 
 import LoginPage from "../pages/auth/LoginPage";
 import DashboardPage from "../pages/dashboard/DashboardPage";
+import OperariosPage from "../pages/operarios/OperariosPage";
+
 
 import AppLayout from "../components/layout/AppLayout";
 
@@ -25,6 +27,7 @@ export default function AppRouter() {
               <AppLayout>
                 <Routes>
                   <Route path="dashboard" element={<DashboardPage />} />
+                  <Route path="operarios" element={<OperariosPage />} />
                 </Routes>
               </AppLayout>
             </ProtectedRoute>
