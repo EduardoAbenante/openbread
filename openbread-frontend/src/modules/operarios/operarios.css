@@ -1,8 +1,8 @@
-/* ==========================================
-   ESTILOS GESTIÓN DE OPERARIOS (OpenBread 2026)
-   ========================================== */
+/* ==========================================================================
+   OPENBREAD ERP (2026) - GESTIÓN DE OPERARIOS & COMPONENTES COMUNES
+   ========================================================================== */
 
-/* Componentes de Diseño y Layout */
+/* --- Estructura, Layout y Toolbar --- */
 .ob-toolbar {
   display: flex;
   justify-content: flex-end;
@@ -31,12 +31,59 @@
   transform: translateY(-1px);
 }
 
-/* Tabla Estilo SaaS Integrada con OpenBread */
+/* --- Panel de Filtros Avanzado --- */
+.ob-filters-panel {
+  background: var(--color-surface);
+  border: 1px solid rgba(123, 75, 42, 0.15);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  align-items: flex-end;
+  box-shadow: 0 2px 4px rgba(40, 25, 15, 0.02);
+}
+
+.ob-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.ob-filter-group label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #7c5233;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.ob-filter-group input,
+.ob-filter-group select {
+  height: 36px;
+  padding: 0 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  transition: all 0.15s ease;
+}
+
+.ob-filter-group input:focus,
+.ob-filter-group select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(123, 75, 42, 0.1);
+}
+
+/* --- Tabla de Datos y Ordenación --- */
 .ob-table-container {
   width: 100%;
   overflow-x: auto;
   border-radius: 0.75rem;
-  border: 1px solid rgba(123, 75, 42, 0.2); /* Borde un poco más definido */
+  border: 1px solid rgba(123, 75, 42, 0.2);
   background: var(--color-surface);
 }
 
@@ -48,14 +95,33 @@
 }
 
 .ob-table th {
-  background: rgba(123, 75, 42, 0.08); /* Más oscura y con mejor contraste */
-  color: #5c3a21; /* Marrón más oscuro y legible */
-  font-weight: 700; /* Mayor peso visual */
+  background: rgba(123, 75, 42, 0.08);
+  color: #5c3a21;
+  font-weight: 700;
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.05em;
   padding: 1rem 1.25rem;
-  border-bottom: 2px solid rgba(123, 75, 42, 0.18); /* Línea divisoria más marcada */
+  border-bottom: 2px solid rgba(123, 75, 42, 0.18);
+}
+
+.ob-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.ob-table th.sortable:hover {
+  background: rgba(123, 75, 42, 0.12);
+  color: var(--color-primary-dark);
+}
+
+.sort-icon {
+  display: inline-block;
+  margin-left: 0.4rem;
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+  color: var(--color-primary);
 }
 
 .ob-table tbody tr {
@@ -68,7 +134,7 @@
 }
 
 .ob-table tbody tr:hover {
-  background: rgba(123, 75, 42, 0.04); /* Hover ligeramente más perceptible */
+  background: rgba(123, 75, 42, 0.04);
 }
 
 .ob-table td {
@@ -77,7 +143,7 @@
   vertical-align: middle;
 }
 
-/* Estado / Badges con colores sólidos y alto contraste */
+/* --- Estados (Badges) y Acciones --- */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -88,16 +154,15 @@
 }
 
 .badge.active {
-  background: #e6f4ea; /* Fondo sólido verde pastel */
-  color: #137333;      /* Texto verde oscuro de alta accesibilidad */
+  background: #e6f4ea;
+  color: #137333;
 }
 
 .badge.inactive {
-  background: #f1f3f4; /* Fondo sólido gris neutral */
-  color: #5f6368;      /* Texto gris oscuro */
+  background: #f1f3f4;
+  color: #5f6368;
 }
 
-/* Acciones y Botones Unificados */
 .ob-actions-cell {
   display: flex;
   gap: 0.5rem;
@@ -106,7 +171,7 @@
 
 .ob-table button {
   height: 32px;
-  min-width: 82px; /* Ancho fijo unificado para simetría total */
+  min-width: 82px;
   padding: 0 0.5rem;
   border-radius: 0.375rem;
   font-size: 0.815rem;
@@ -114,7 +179,7 @@
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  justify-content: center; /* Centrado perfecto de etiquetas */
+  justify-content: center;
   transition: all 0.15s ease;
   border: 1px solid transparent;
 }
@@ -122,7 +187,7 @@
 .ob-table button.edit-button {
   background: #fff;
   color: var(--color-primary);
-  border: 1px solid rgba(123, 75, 42, 0.35); /* Borde más visible */
+  border: 1px solid rgba(123, 75, 42, 0.35);
 }
 
 .ob-table button.edit-button:hover {
@@ -131,7 +196,7 @@
 }
 
 .ob-table button.activate-button {
-  background: #3b6139; /* Verde más profundo para contrastar mejor con el texto blanco */
+  background: #3b6139;
   color: white;
 }
 
@@ -140,8 +205,8 @@
 }
 
 .ob-table button.danger {
-  background: #fce8e6; /* Fondo rojo suave pero sólido */
-  color: #c5221f;      /* Texto rojo intenso accesible */
+  background: #fce8e6;
+  color: #c5221f;
   border: 1px solid #fad2cf;
 }
 
@@ -151,18 +216,7 @@
   border-color: #c5221f;
 }
 
-.ob-modal-actions button.danger {
-  background: rgba(176, 0, 32, 0.05);
-  color: #b00020;
-  border: 1px solid rgba(176, 0, 32, 0.15);
-}
-
-.ob-modal-actions button.danger:hover {
-  background: #b00020;
-  color: white;
-}
-
-/* Modales Modernos */
+/* --- Componente Modal Global Anidado y Animado --- */
 .ob-modal {
   position: fixed;
   inset: 0;
@@ -173,17 +227,35 @@
   align-items: center;
   z-index: 50;
   padding: 1rem;
+  animation: obFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Cualquier contenedor directo dentro del Modal se comporta como la tarjeta base */
+.ob-modal > div, 
 .ob-modal-content {
   background: var(--color-surface);
   padding: 2rem;
   border-radius: 0.875rem;
   width: 100%;
-  max-width: 1080px; 
+  box-shadow: 0 20px 25px -5px rgba(40, 25, 15, 0.15);
+  animation: obSlideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Tamaños de modales condicionados por su semántica */
+.ob-modal-form, 
+.ob-modal > form,
+.ob-modal > .ob-modal-form-container {
+  max-width: 1080px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 20px 25px -5px rgba(40, 25, 15, 0.15);
+}
+
+.ob-modal-alert,
+.ob-modal-delete,
+.ob-modal-activate,
+.ob-modal > .ob-modal-alert-container {
+  max-width: 480px;
+  text-align: center;
 }
 
 .ob-modal-header {
@@ -206,11 +278,7 @@
   margin-top: 0.75rem;
 }
 
-/* Formulario - PRESERVADO AL 100% */
-.ob-modal-form {
-  width: 100%;
-}
-
+/* --- Formulario de Entrada --- */
 .ob-form-row {
   display: grid;
   grid-template-columns: 1.5fr 1fr; 
@@ -251,8 +319,7 @@
 }
 
 .ob-form-left input,
-.ob-form-left select,
-.photo-upload-card input[type="file"] {
+.ob-form-left select {
   height: 38px;
   padding: 0 0.85rem;
   border-radius: 0.375rem;
@@ -282,74 +349,16 @@
 .ob-form-right {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 1.5rem;
-}
-
-.photo-upload-card {
-  border: 1px dashed var(--color-border); 
-  border-radius: 0.5rem;
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  background: rgba(0, 0, 0, 0.01);
-}
-
-.photo-preview {
-  width: 100%;
-  aspect-ratio: 4/3;
-  object-fit: cover;
-  border-radius: 0.375rem;
-  border: 1px solid var(--color-border);
-}
-
-.ob-modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  margin-top: auto; 
-}
-
-.ob-modal-actions button {
-  height: 38px;
-  padding: 0 1.5rem;
-  border-radius: 0.375rem;
-  font-weight: 500;
-  font-size: 0.875rem;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.15s ease;
-}
-
-.ob-modal-actions button[type="submit"] {
-  background: var(--color-primary);
-  color: white;
-  border: none;
-}
-
-.ob-modal-actions button[type="submit"]:hover {
-  background: var(--color-primary-dark);
-}
-
-/* ==========================================
-   ZONA DE CARGA DE FOTO PREMIUM (SaaS 2026)
-   ========================================== */
-
-.ob-form-right {
-  display: flex;
-  flex-direction: column;
   gap: 1.5rem;
   height: 100%;
 }
 
+/* --- Zona Premium Interactiva de Carga de Foto --- */
 .photo-upload-card {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  flex: 1; /* Hace que ocupe el alto disponible de forma elegante */
+  flex: 1;
 }
 
 .photo-upload-label {
@@ -358,7 +367,6 @@
   font-size: 0.815rem;
 }
 
-/* Ocultamos el input nativo feo del navegador */
 .photo-input-hidden {
   position: absolute;
   width: 1px;
@@ -370,14 +378,13 @@
   border: 0;
 }
 
-/* Dropzone estilizado interactivo */
 .photo-dropzone {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex: 1;
-  min-height: 220px; /* Evita el hueco en blanco de imagen_4.png */
+  min-height: 220px;
   border: 2px dashed rgba(123, 75, 42, 0.25);
   border-radius: 0.75rem;
   background: rgba(123, 75, 42, 0.01);
@@ -394,7 +401,12 @@
   border-color: var(--color-primary);
 }
 
-/* Contenido del Placeholder */
+.photo-dropzone.dragging {
+  background: rgba(123, 75, 42, 0.08);
+  border-color: var(--color-primary);
+  transform: scale(0.99);
+}
+
 .photo-placeholder-content {
   display: flex;
   flex-direction: column;
@@ -435,7 +447,6 @@
   color: #94a3b8;
 }
 
-/* Vista previa de la foto perfectamente integrada */
 .photo-preview-container {
   width: 100%;
   height: 100%;
@@ -450,7 +461,6 @@
   transition: transform 0.2s ease;
 }
 
-/* Capa flotante al pasar el ratón sobre la foto ya cargada */
 .photo-preview-overlay {
   position: absolute;
   inset: 0;
@@ -473,60 +483,67 @@
   transform: scale(1.02);
 }
 
-/* ==========================================
-   MEJORAS DRAG & DROP Y ANIMACIONES (2026)
-   ========================================== */
-
-/* Estado dinámico cuando el usuario arrastra un archivo sobre la zona */
-.photo-dropzone.dragging {
-  background: rgba(123, 75, 42, 0.08);
-  border-color: var(--color-primary);
-  transform: scale(0.99); /* Efecto sutil de hundimiento */
-}
-
-/* --- ANIMACIONES DEL MODAL --- */
-
-/* Animación de desvanecimiento para el fondo oscuro */
-@keyframes obFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* Animación de entrada estilizada para la tarjeta del modal (sube y se desvanece) */
-@keyframes obSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.ob-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(40, 25, 15, 0.4); 
-  backdrop-filter: blur(4px);
+/* --- Botones de Acción de Ventanas Modales --- */
+.ob-modal-actions {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 50;
-  padding: 1rem;
-  /* Aplicamos la animación al fondo */
-  animation: obFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: auto; 
 }
 
-.ob-modal-content {
-  background: var(--color-surface);
-  padding: 2rem;
-  border-radius: 0.875rem;
-  width: 100%;
-  max-width: 1080px; 
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 20px 25px -5px rgba(40, 25, 15, 0.15);
-  /* Aplicamos la animación al contenido del modal */
-  animation: obSlideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; /* Efecto elástico premium */
+.ob-modal-actions button {
+  height: 38px;
+  padding: 0 1.5rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.ob-modal-actions button[type="submit"] {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+}
+
+.ob-modal-actions button[type="submit"]:hover {
+  background: var(--color-primary-dark);
+}
+
+.ob-modal-actions button.danger {
+  background: rgba(176, 0, 32, 0.05);
+  color: #b00020;
+  border: 1px solid rgba(176, 0, 32, 0.15);
+}
+
+.ob-modal-actions button.danger:hover {
+  background: #b00020;
+  color: white;
+}
+
+/* --- Animaciones del Ciclo de Vida del Modal (Transiciones CSS) --- */
+.ob-modal.is-closing {
+  animation: obFadeOut 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.ob-modal.is-closing > div,
+.ob-modal.is-closing .ob-modal-content {
+  animation: obSlideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes obFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes obFadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+@keyframes obSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes obSlideDown {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(15px) scale(0.98); }
 }

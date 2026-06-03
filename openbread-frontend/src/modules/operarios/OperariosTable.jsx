@@ -1,17 +1,23 @@
 import "./operarios.css";
 
-export default function OperariosTable({ operarios, onEdit, onDelete, onActivate }) {
+export default function OperariosTable({ operarios, sortConfig, onSort, onEdit, onDelete, onActivate }) {
+  
+  const renderSortIcon = (key) => {
+    if (!sortConfig || sortConfig.key !== key) return <span className="sort-icon">↕</span>;
+    return sortConfig.direction === "asc" ? <span className="sort-icon">▲</span> : <span className="sort-icon">▼</span>;
+  };
+
   return (
     <div className="ob-table-container">
       <table className="ob-table">
         <thead>
           <tr>
-            <th>NIF</th>
-            <th>Nombre Completo</th>
-            <th>Correo electrónico</th>
-            <th>Teléfono</th>
+            <th className="sortable" onClick={() => onSort("nif")}>NIF {renderSortIcon("nif")}</th>
+            <th className="sortable" onClick={() => onSort("name")}>Nombre Completo {renderSortIcon("name")}</th>
+            <th className="sortable" onClick={() => onSort("email")}>Correo electrónico {renderSortIcon("email")}</th>
+            <th className="sortable" onClick={() => onSort("phone")}>Teléfono {renderSortIcon("phone")}</th>
             <th>C.P.</th>
-            <th>Estado</th>
+            <th className="sortable" onClick={() => onSort("active")}>Estado {renderSortIcon("active")}</th>
             <th style={{ textAlign: "right" }}>Acciones</th>
           </tr>
         </thead>
@@ -47,6 +53,13 @@ export default function OperariosTable({ operarios, onEdit, onDelete, onActivate
               </td>
             </tr>
           ))}
+          {operarios.length === 0 && (
+            <tr>
+              <td colSpan="7" style={{ textAlign: "center", padding: "2.5rem", color: "#94a3b8" }}>
+                No se encontraron operarios con los criterios seleccionados.
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

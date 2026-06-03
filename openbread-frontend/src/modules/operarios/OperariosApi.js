@@ -1,7 +1,7 @@
 import api from "../../api/axiosConfig";
 
-export const getOperarios = async () => {
-  const res = await api.get("/user/users");
+export const getOperarios = async (params = {}) => {
+  const res = await api.get("/user/users", { params });
   return res.data;
 };
 
