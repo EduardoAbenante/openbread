@@ -47,11 +47,11 @@ export const ImageUploadZone = ({
   };
 
   return (
-    <div className="photo-upload-card">
-      <span className="photo-upload-label">{label}</span>
+    <div className="flex flex-col gap-3 flex-1">
+      <span className="font-medium text-[var(--color-text)] opacity-70 text-[0.815rem]">{label}</span>
       
       <label 
-        className={`photo-dropzone ${isDragging ? 'dragging' : ''}`}
+        className={`flex flex-col items-center justify-center flex-1 min-h-[220px] border-2 border-dashed rounded-[0.75rem] cursor-pointer p-6 text-center transition-all duration-200 relative overflow-hidden box-border ${isDragging ? 'bg-[rgba(123,75,42,0.08)] border-[var(--color-primary)] scale-[0.99]' : 'border-[rgba(123,75,42,0.18)] bg-[rgba(123,75,42,0.02)] hover:bg-[rgba(123,75,42,0.05)] hover:border-[var(--color-primary)]'}`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -60,25 +60,25 @@ export const ImageUploadZone = ({
           type="file" 
           accept={accept} 
           onChange={handleFileChange}
-          className="photo-input-hidden"
+          className="hidden"
         />
         
         {previewUrl ? (
-          <div className="photo-preview-container">
-            <img src={previewUrl} className="photo-preview" alt={label} />
-            <div className="photo-preview-overlay">
-              <span>Cambiar imagen</span>
+          <div className="w-full h-full absolute inset-0">
+            <img src={previewUrl} className="w-full h-full object-cover transition-transform duration-200 hover:scale-[1.02]" alt={label} />
+            <div className="absolute inset-0 bg-[rgba(40,25,15,0.6)] flex items-center justify-center text-white text-[0.875rem] font-semibold opacity-0 transition-opacity duration-200 hover:opacity-100">
+              <span className="text-white">Cambiar imagen</span>
             </div>
           </div>
         ) : (
-          <div className="photo-placeholder-content">
-            <div className="photo-icon-avatar">
-              <span className="icon-plus">+</span>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-12 h-12 rounded-full bg-[rgba(123,75,42,0.08)] flex items-center justify-center text-[var(--color-primary)] mb-1">
+              <span className="text-[1.25rem] font-semibold">+</span>
             </div>
-            <p className="photo-upload-text">
-              <strong>Haz clic para subir</strong> o arrastra
+            <p className="text-[0.875rem] text-[var(--color-text)] opacity-80 m-0">
+              <strong className="text-[var(--color-primary)] font-semibold">Haz clic para subir</strong> o arrastra
             </p>
-            <span className="photo-upload-subtext">
+            <span className="text-[0.75rem] text-[var(--color-text)] opacity-50">
               {dimensionsText} ({maxSizeText})
             </span>
           </div>
