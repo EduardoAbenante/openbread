@@ -4,7 +4,7 @@ export default function Button({
   className = '', 
   ...props 
 }) {
-  const baseStyles = "h-[38px] px-6 rounded-[0.375rem] font-medium text-[0.875rem] inline-flex items-center justify-center cursor-pointer transition-all duration-150 ease-in-out border";
+  const baseStyles = "h-[2.375rem] px-6 rounded-[0.375rem] font-medium text-[0.875rem] inline-flex items-center justify-center cursor-pointer transition-all duration-150 ease-in-out border";
   
   const variants = {
     primary: "bg-[var(--color-primary)] text-white border-transparent hover:bg-[var(--color-primary-dark)]",

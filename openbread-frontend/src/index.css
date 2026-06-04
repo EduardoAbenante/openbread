@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  font-size: 18px; /* Aumentamos el tamaño base de 16px a 18px */
+}
+
 body {
   margin: 0;
   font-family: "Inter", "Segoe UI", sans-serif;
@@ -18,6 +22,7 @@ select {
   padding: 0.5rem 0.75rem;
   width: 100%;
   box-sizing: border-box;
+  min-height: 2.375rem;
 }
 
 input:focus,
