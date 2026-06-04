@@ -4,6 +4,7 @@ import com.eab.openbread.domain.model.User
 import com.eab.openbread.domain.service.UserService
 import com.eab.openbread.web.dto.user.UserCreateDTO
 import com.eab.openbread.web.dto.user.UserPasswordUpdateDTO
+import com.eab.openbread.web.dto.user.UserResponseDTO
 import com.eab.openbread.web.dto.user.UserRoleUpdateDTO
 import com.eab.openbread.web.dto.user.UserUpdateDTO
 import jakarta.validation.Valid
@@ -36,7 +37,7 @@ class UserController(
     fun findUsers(
         @RequestParam(required = false) search: String?,
         @RequestParam(required = false) active: Boolean?
-    ): ResponseEntity<List<User>> {
+    ): ResponseEntity<List<UserResponseDTO>> {
         val users = userService.findUsers(search, active)
         return ResponseEntity.ok(users)
     }

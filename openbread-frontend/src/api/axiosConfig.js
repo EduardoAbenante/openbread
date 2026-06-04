@@ -25,8 +25,8 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Si el token está caducado → 401
-    if (error.response?.status === 401) {
+    // Si el token está caducado → 403
+    if (error.response?.status === 403) {
       console.warn("Token expirado. Cerrando sesión…");
 
       // Evitar loops infinitos

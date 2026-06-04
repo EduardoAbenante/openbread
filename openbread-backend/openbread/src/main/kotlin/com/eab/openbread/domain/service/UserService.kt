@@ -7,6 +7,8 @@ import com.eab.openbread.domain.repository.UserRepository
 import com.eab.openbread.domain.specification.UserSpecification
 import com.eab.openbread.web.dto.user.UserCreateDTO
 import com.eab.openbread.web.dto.user.UserPasswordUpdateDTO
+import com.eab.openbread.web.dto.user.UserResponseDTO
+import com.eab.openbread.web.dto.user.toUserResponseDTO
 import com.eab.openbread.web.dto.user.UserRoleUpdateDTO
 import com.eab.openbread.web.dto.user.UserUpdateDTO
 import com.eab.openbread.web.dto.user.toEntity
@@ -66,9 +68,9 @@ class UserService(
      * Finds all users in the Database
      * @return List of all users
      */
-    fun findAllUsers(): List<User> {
+    fun findAllUsers(): List<UserResponseDTO> {
         logger.info("Fetching all users")
-        return userRepository.findAll()
+        return userRepository.findAll().map { toUserResponseDTO(it) }
     }
 
 
@@ -85,17 +87,12 @@ class UserService(
      * 2. Execute the Specification through the repository.
      * 3. Return all users that satisfy the resulting criteria.
      *
-     * @param nif Optional NIF filter (exact match).
-     * @param name Optional name filter (case-insensitive partial match).
-     * @param surname Optional surname filter (case-insensitive partial match).
-     * @param email Optional email filter (exact match).
-     * @param phone Optional phone filter (exact match).
-     * @param postalCode Optional postal code filter (exact match).
+     * @param search Optional search query for smartSearch.
      * @param active Optional active status filter.
      *
      * @return A list of users matching the provided filters.
      */
-    fun findUsers(search: String?, active: Boolean?): List<User> {
+    fun findUsers(search: String?, active: Boolean?): List<UserResponseDTO> {
         logger.info("Searching users with Smart Search: query='$search', active=$active")
 
         // Combinamos las especificaciones con un AND lógico
@@ -103,7 +100,7 @@ class UserService(
             .where(UserSpecification.smartSearch(search))
             .and(UserSpecification.withActiveStatus(active))
 
-        return userRepository.findAll(spec)
+        return userRepository.findAll(spec).map { toUserResponseDTO(it) }
     }
 
     /**

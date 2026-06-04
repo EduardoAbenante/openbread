@@ -25,6 +25,9 @@ export default function OperariosTable({ operarios, sortConfig, onSort, onEdit, 
             <th className="sortable" onClick={() => onSort("postalCode")}>
               C.P. {renderSortIcon("postalCode")}
             </th>
+            <th className="sortable" onClick={() => onSort("role")}>
+              Rol {renderSortIcon("role")}
+            </th>
             <th className="sortable" onClick={() => onSort("active")}>
               Estado {renderSortIcon("active")}
             </th>
@@ -40,6 +43,11 @@ export default function OperariosTable({ operarios, sortConfig, onSort, onEdit, 
               <td>{op.email}</td>
               <td>{op.phone || "—"}</td>
               <td>{op.postalCode || "—"}</td>
+              <td>
+                <span className={`badge-role ${op.role === 'ADMIN' ? 'role-admin' : 'role-standard'}`}>
+                  {op.role === 'ADMIN' ? 'Administrador' : 'Estándar'}
+                </span>
+              </td>
               <td>
                 <span className={`badge ${op.active ? "active" : "inactive"}`}>
                   {op.active ? "Activo" : "Inactivo"}
@@ -65,7 +73,7 @@ export default function OperariosTable({ operarios, sortConfig, onSort, onEdit, 
           ))}
           {operarios.length === 0 && (
             <tr>
-              <td colSpan="7" style={{ textAlign: "center", padding: "2.5rem", color: "#94a3b8" }}>
+              <td colSpan="8" style={{ textAlign: "center", padding: "2.5rem", color: "#94a3b8" }}>
                 No se encontraron operarios con los criterios seleccionados.
               </td>
             </tr>
