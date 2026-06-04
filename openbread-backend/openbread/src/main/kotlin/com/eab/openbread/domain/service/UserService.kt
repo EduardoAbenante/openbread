@@ -44,12 +44,12 @@ class UserService(
 
         if (userRepository.existsByNif(userDTO.nif)) {
             logger.warn("User creation failed: NIF already in use (${userDTO.nif})")
-            throw DuplicateResourceException("NIF already in use")
+            throw DuplicateResourceException("error.user.nif_exists")
         }
 
         if (userRepository.existsByEmail(userDTO.email)){
             logger.warn("User creation failed: Email already in use (${userDTO.email})")
-            throw DuplicateResourceException("Email already in use")
+            throw DuplicateResourceException("error.user.email_exists")
         }
 
         try {
@@ -60,7 +60,7 @@ class UserService(
             return savedUser.id
         } catch (e: DataIntegrityViolationException) {
             logger.error("User creation failed due to database constraint violation", e)
-            throw DuplicateResourceException("User already exists")
+            throw DuplicateResourceException("error.unexpected")
         }
     }
 
@@ -126,7 +126,7 @@ class UserService(
         val user = userRepository.findById(id)
             .orElseThrow {
                 logger.warn("User update failed: userId=$id not found")
-                ResourceNotFoundException("User with id $id not found")
+                ResourceNotFoundException("error.user.not_found")
             }
 
         dto.name?.let {user.name = it}
@@ -162,7 +162,7 @@ class UserService(
         val user = userRepository.findById(id)
             .orElseThrow {
                 logger.warn("Password update failed: userId=$id not found")
-                ResourceNotFoundException("User with id $id not found")
+                ResourceNotFoundException("error.user.not_found")
             }
         val hashedPassword = passwordEncoder.encode(dto.password)!!
         user.password = hashedPassword
@@ -190,11 +190,10 @@ class UserService(
      * @throws ResourceNotFoundException if the user does not exist.
      */
     fun updateUserRole(id:Long, dto: UserRoleUpdateDTO): Long {
-        logger.warn("Updating role for userId=$id to role=${dto.role}")
         val user = userRepository.findById(id)
             .orElseThrow {
                 logger.warn("Role update failed: userId=$id not found")
-                ResourceNotFoundException("User with id $id not found")
+                ResourceNotFoundException("error.user.not_found")
             }
 
         user.role = dto.role
@@ -221,13 +220,13 @@ class UserService(
      */
     fun deleteUser(id: Long, currentUserEmail: String) {
         val user = userRepository.findById(id)
-            .orElseThrow { ResourceNotFoundException("User with id $id not found") }
+            .orElseThrow { ResourceNotFoundException("error.user.not_found") }
 
         val mail = user.email
 
         if (currentUserEmail == mail) {
             logger.warn("User $id attempted to delete themselves — operation blocked")
-            throw IllegalArgumentException("You cannot delete your own account")
+            throw IllegalArgumentException("error.user.delete_self")
         }
 
         user.active = false

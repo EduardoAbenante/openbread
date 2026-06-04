@@ -6,20 +6,20 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 
 data class UserCreateDTO (
-    @field:NotBlank(message = "User NIF can't be empty")
+    @field:NotBlank(message = "{val.user.nif.empty}")
     val nif: String,
 
-    @field:NotBlank(message = "User name can't be empty")
+    @field:NotBlank(message = "{val.user.name.empty}")
     val name: String,
 
-    @field:NotBlank(message = "User surname can't be empty")
+    @field:NotBlank(message = "{val.user.surname.empty}")
     val surname: String,
 
-    @field:NotBlank(message = "User email can't be empty")
+    @field:NotBlank(message = "{val.user.email.empty}")
     val email:String,
 
-    @field:NotBlank(message = "User password can't be empty")
-    @field:Size(min = 6, max = 100, message = "User password can't be empty")
+    @field:NotBlank(message = "{val.user.password.empty}")
+    @field:Size(min = 6, max = 100, message = "{val.user.password.size}")
     val password: String,
 
     val phone: String?,

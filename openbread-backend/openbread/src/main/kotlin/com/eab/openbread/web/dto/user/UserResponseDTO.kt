@@ -12,7 +12,8 @@ data class UserResponseDTO (
     val email:String,
     val phone: String?,
     val postalCode: String?,
-    val role: Role
+    val role: Role,
+    val active: Boolean
 )
 
 fun toUserResponseDTO(user: User): UserResponseDTO {
@@ -24,7 +25,8 @@ fun toUserResponseDTO(user: User): UserResponseDTO {
         email = user.email,
         phone = user.phone,
         postalCode = user.postalCode,
-        role = user.role
+        role = user.role,
+        active = user.active
     )
     return newDTO
 }

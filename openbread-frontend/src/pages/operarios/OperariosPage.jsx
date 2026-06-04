@@ -79,6 +79,8 @@ export default function OperariosPage() {
       name: data.name || data.nombre,
       surname: data.surname || data.apellido,
       email: data.email,
+      password: data.password,
+      role: data.role,
       phone: data.phone || data.telefono,
       postalCode: data.postalCode || data.cp,
       active: data.active

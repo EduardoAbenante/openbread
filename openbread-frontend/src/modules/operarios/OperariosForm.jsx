@@ -22,7 +22,9 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
     try {
       await onSubmit(form);
     } catch (err) {
-      setError(err.response?.data?.message || err.response?.data?.errors?.join(", ") || "Error inesperado");
+      const serverMessage = err.response?.data?.message || err.response?.data?.error;
+      const validationErrors = err.response?.data?.errors ? Object.entries(err.response.data.errors).map(([k, v]) => `${k}: ${v}`).join(", ") : null;
+      setError(serverMessage || validationErrors || "Error inesperado");
     }
   };
 
