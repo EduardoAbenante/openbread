@@ -592,3 +592,75 @@
   from { opacity: 1; transform: translateY(0) scale(1); }
   to { opacity: 0; transform: translateY(15px) scale(0.98); }
 }
+
+/* Estilo para los textos de error de Zod */
+.error-message {
+  color: #dc2626;          /* Un rojo corporativo elegante (similar al de Tailwind red-600) */
+  font-size: 0.825rem;     /* Un poco más pequeña que el texto normal */
+  font-weight: 500;
+  margin-top: 0.25rem;
+  display: block;          /* Fuerza a que el error se coloque debajo del input */
+}
+
+/* Opcional: Si quieres que el borde del input también se pinte de rojo al fallar */
+.input-error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2; /* Un fondo rosado muy sutil */
+}
+
+/* Contenedor de la zona inferior (Contraseña, Teléfono, Error y CP) */
+.ob-bottom-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas de igual tamaño (50% cada una) */
+  gap: 1rem;                      /* Espacio uniforme entre campos */
+  width: 100%;
+  margin-top: 1rem;
+}
+
+/* Forzamos las posiciones iniciales para que no se desordenen */
+.grid-password-field {
+  grid-column: 1; /* Columna izquierda */
+}
+
+.grid-phone-field {
+  grid-column: 2; /* Columna derecha */
+}
+
+/* 🔥 LA CLAVE: El mensaje de error ocupa el ancho completo de las dos columnas */
+.grid-password-error {
+  grid-column: span 2; /* Se estira ocupando la columna 1 y 2 */
+  color: #dc2626;      /* Rojo enrutado */
+  font-size: 0.825rem;
+  font-weight: 500;
+  margin-top: -0.5rem; /* Ajuste sutil para que no quede demasiado separado del input */
+}
+
+.grid-postal-field {
+  grid-column: 1; /* El código postal se mantiene abajo a la izquierda */
+}
+
+/* Asegura que los campos que deben ir al 100% (Email y Contraseña) hereden el ancho completo */
+.full-width-field-group {
+  grid-column: span 2; 
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+/* Fila compartida para los dos últimos campos inferiores */
+.ob-bottom-fields-shared-row {
+  grid-column: span 2;               /* Ocupa todo el ancho del contenedor izquierdo */
+  display: grid;
+  grid-template-columns: 1fr 1fr;    /* Divide el espacio en dos columnas del 50% */
+  gap: 1.25rem;                      /* Mantiene el gap original de tu ERP */
+  width: 100%;
+  margin-top: 0.25rem;               /* Ajuste estético */
+}
+
+/* Estructura vertical interna para las etiquetas e inputs de Teléfono y CP */
+.half-field-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
