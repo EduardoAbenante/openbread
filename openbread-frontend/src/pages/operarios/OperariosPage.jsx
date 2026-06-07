@@ -148,8 +148,8 @@ export default function OperariosPage() {
         </div>
 
         {loading ? (
-          <div style={{ textAlign: "center", padding: "2.5rem", color: "var(--color-primary)", fontWeight: 500 }}>
-            Filtrando en servidor...
+          <div className="text-center p-10 text-[var(--color-primary)] font-medium">
+              Filtrando en servidor...
           </div>
         ) : (
           <OperariosTable

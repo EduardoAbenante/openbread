@@ -2,7 +2,6 @@ package com.eab.openbread.domain.service
 
 import com.eab.openbread.domain.exception.DuplicateResourceException
 import com.eab.openbread.domain.exception.ResourceNotFoundException
-import com.eab.openbread.domain.model.User
 import com.eab.openbread.domain.repository.UserRepository
 import com.eab.openbread.domain.specification.UserSpecification
 import com.eab.openbread.web.dto.user.UserCreateDTO
@@ -12,17 +11,18 @@ import com.eab.openbread.web.dto.user.toUserResponseDTO
 import com.eab.openbread.web.dto.user.UserRoleUpdateDTO
 import com.eab.openbread.web.dto.user.UserUpdateDTO
 import com.eab.openbread.web.dto.user.toEntity
-import jakarta.validation.constraints.Email
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 
 @Service
 class UserService(
     private val userRepository: UserRepository,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
+    private val fileService: FileService
 ) {
     //CRUD Create Read Update Delete
     private val logger = LoggerFactory.getLogger(UserService::class.java)
@@ -201,6 +201,35 @@ class UserService(
         logger.warn("Role updated successfully for userId=$id to role=${dto.role}")
         return saved.id
     }
+
+    /**
+     * Updates the avatar of a user by uploading a new image.
+     * @param id The ID of the user whose avatar will be updated.
+     * @param file The new avatar image file.
+     * @return The relative path of the saved avatar image.
+     * @throws ResourceNotFoundException if the user does not exist.
+     * @throws IllegalStateException if the file upload fails.
+     * @throws IllegalArgumentException if the file is not an image.
+     * @throws DuplicateResourceException if the file name already exists.
+     */
+    fun updateUploadedAvatar(id: Long, file: MultipartFile): String {
+        logger.info("Attempting to update avatar for user with id=$id")
+        val user = userRepository.findById(id)
+            .orElseThrow {
+                logger.warn("Avatar update failed: userId=$id not found")
+                ResourceNotFoundException("error.user.not_found")
+            }
+
+        val savedRelativePath = fileService.saveFile(file, "avatars")
+
+        user.photoUrl = savedRelativePath
+        userRepository.save(user)
+
+        logger.info("Avatar updated successfully for user with id=$id")
+        return savedRelativePath
+    }
+
+
 
     /**
      * Performs a logical deletion of a user by setting the active flag to false.
