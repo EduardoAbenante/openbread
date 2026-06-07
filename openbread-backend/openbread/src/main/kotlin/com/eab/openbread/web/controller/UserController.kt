@@ -70,7 +70,7 @@ class UserController(
         return ResponseEntity.ok(updatedId)
     }
 
-    @PostMapping("/{id}/avatar")
+    @PostMapping("/{id}/photo")
     fun updateUserAvatar(
         @PathVariable id: Long,
         @RequestParam("photoFile") file: MultipartFile,

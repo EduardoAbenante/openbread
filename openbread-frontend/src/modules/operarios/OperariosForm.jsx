@@ -18,16 +18,21 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
   const handleSubmit = async () => {
     if (!form.nif?.trim()) return setError("El NIF es obligatorio");
     if (!form.name?.trim()) return setError("El nombre es obligatorio");
-    if (!form.surname?.trim()) return setError("Los apellidos es obligatorio");
+    if (!form.surname?.trim()) return setError("Los apellidos son obligatorios");
     if (!form.email?.trim()) return setError("El correo es obligatorio");
     if (!initial.id && !form.password?.trim()) return setError("La contraseña es obligatoria");
 
     try {
-      await onSubmit(form);
+      setError(""); // Limpiamos errores previos antes de enviar
+      await onSubmit(form); // Llama a handleSave de OperariosPage
     } catch (err) {
+      // Captura tanto errores de validación de Spring Boot (@Valid) como fallos de red
       const serverMessage = err.response?.data?.message || err.response?.data?.error;
-      const validationErrors = err.response?.data?.errors ? Object.entries(err.response.data.errors).map(([k, v]) => `${k}: ${v}`).join(", ") : null;
-      setError(serverMessage || validationErrors || "Error inesperado");
+      const validationErrors = err.response?.data?.errors 
+        ? Object.entries(err.response.data.errors).map(([k, v]) => `${k}: ${v}`).join(", ") 
+        : null;
+          
+      setError(serverMessage || validationErrors || "Error inesperado al conectar con el servidor de OpenBread");
     }
   };
 

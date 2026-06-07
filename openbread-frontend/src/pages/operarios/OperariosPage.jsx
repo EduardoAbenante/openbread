@@ -13,6 +13,7 @@ import {
   getOperarios,
   createOperario,
   updateOperario,
+  uploadOperarioAvatar,
   activateOperario,
   deleteOperario
 } from "../../modules/operarios/OperariosApi";
@@ -74,7 +75,7 @@ export default function OperariosPage() {
 
   // Operaciones de persistencia CRUD
   const handleSave = async (data) => {
-    // Aseguramos que el mapeo interno coincida con el backend al crear/editar
+    // Payload estructurado según los DTOs de Spring Boot (UserCreateDTO / UserUpdateDTO)
     const payload = {
       id: data.id,
       nif: data.nif,
@@ -88,10 +89,30 @@ export default function OperariosPage() {
       active: data.active
     };
 
-    if (payload.id) await updateOperario(payload.id, payload);
-    else await createOperario(payload);
-    setEditing(null);
-    load();
+    try {
+      let userId = payload.id;
+
+      // 1. Persistencia de datos de texto planos
+      if (payload.id) {
+        // Tu PUT devuelve ResponseEntity<Long>
+        userId = await updateOperario(payload.id, payload);
+      } else {
+        // Tu POST devuelve ResponseEntity<Long>
+        userId = await createOperario(payload);
+      }
+
+      // 2. Si Spring Boot procesó el usuario correctamente y hay una foto en cola, la subimos
+      if (data.photoFile && userId) {
+        await uploadOperarioAvatar(userId, data.photoFile);
+      }
+
+      setEditing(null);
+      load(); // Recarga la cuadrícula con el nuevo operario y su miniatura actualizada
+    } catch (error) {
+      console.error("Error al guardar el operario o su avatar:", error);
+      // Lanza el error hacia el formulario para que el bloque catch de OperariosForm lo muestre en pantalla
+      throw error;
+    }
   };
 
   const handleDelete = async () => {

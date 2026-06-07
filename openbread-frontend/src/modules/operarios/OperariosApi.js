@@ -25,6 +25,18 @@ export const updateOperarioPassword = async (id, password) => {
   return res.data;
 };
 
+export const uploadOperarioAvatar = async(id, file) => {
+  const formData = new FormData();
+  formData.append('photoFile', file);
+
+  const res = await api.post(`/user/${id}/photo`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+  return res.data;
+}
+
 export const activateOperario = async (id) => {
   const res = await api.put(`/user/${id}/activate`);
   return res.data;
