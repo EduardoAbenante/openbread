@@ -5,51 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6334bfa8-8d77-4d14-8e01-598578eda3df" name="Changes" comment="restructuracion">
+      <change afterPath="$PROJECT_DIR$/openbread-backend/openbread/src/main/kotlin/com/eab/openbread/domain/StorageConfig.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/dataSources.local.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/dataSources/fa92b116-e141-4088-8b03-8448a4ad488b.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/dataSources/fa92b116-e141-4088-8b03-8448a4ad488b/storage_v2/_src_/database/openbread.7pBUXA.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/dataSources/fa92b116-e141-4088-8b03-8448a4ad488b/storage_v2/_src_/database/openbread.7pBUXA/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/dataSources/fa92b116-e141-4088-8b03-8448a4ad488b/storage_v2/_src_/database/openbread.7pBUXA/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/dataSources/fa92b116-e141-4088-8b03-8448a4ad488b/storage_v2/_src_/database/openbread.7pBUXA/schema/public.abK9xQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/dataSources/fa92b116-e141-4088-8b03-8448a4ad488b/storage_v2/_src_/database/postgres.edMnLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/dataSources/fa92b116-e141-4088-8b03-8448a4ad488b/storage_v2/_src_/database/postgres.edMnLQ/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/dataSources/fa92b116-e141-4088-8b03-8448a4ad488b/storage_v2/_src_/database/postgres.edMnLQ/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/dataSources/fa92b116-e141-4088-8b03-8448a4ad488b/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/data_source_mapping.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/kotlinc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/openbread.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/queries/Query.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/sqldialects.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/build.gradle.kts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/settings.gradle.kts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/src/main/kotlin/com/eab/openbread/OpenbreadApplication.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/src/main/kotlin/com/eab/openbread/config/SecurityConfig.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/src/main/kotlin/com/eab/openbread/domain/model/User.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/src/main/kotlin/com/eab/openbread/domain/repository/UserRepository.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/src/main/kotlin/com/eab/openbread/domain/service/UserService.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/src/main/kotlin/com/eab/openbread/web/controller/UserController.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/src/main/kotlin/com/eab/openbread/web/dto/user/UserCreateDTO.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/openbread/src/test/kotlin/com/eab/openbread/OpenbreadApplicationTests.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/openbread-backend/openbread/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/openbread-backend/openbread/build.gradle.kts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$/backend/openbread">
@@ -76,49 +43,49 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "EduardoAbenante"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;EduardoAbenante&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/EduardoAbenante/openbread.git",
-    "accountId": "8566c189-5bc7-4dac-b2bc-c96234d7a9c6"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/EduardoAbenante/openbread.git&quot;,
+    &quot;accountId&quot;: &quot;8566c189-5bc7-4dac-b2bc-c96234d7a9c6&quot;
   }
-}]]></component>
+}</component>
   <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$/backend/openbread" gradleHome="$USER_HOME$/.gradle/wrapper/dists/gradle-9.5.1-bin/iq79hdu3mqx29lgffhp8bfmx/gradle-9.5.1" javaHome="/usr/lib/jvm/java-26-openjdk" gradleVersion="9.5.1" />
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="3EYD2hrFUtLc6YFuPkSf2zqq7nB" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "master",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/eduardo/Programacion/openbread/openbread-frontend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/eduardo/Programacion/openbread&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="OpenbreadApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
@@ -145,6 +112,8 @@
       <option name="presentableId" value="Default" />
       <updated>1780346407725</updated>
       <workItem from="1780346412424" duration="661000" />
+      <workItem from="1780858057593" duration="342000" />
+      <workItem from="1780927192013" duration="1748000" />
     </task>
     <task id="LOCAL-00001" summary="restructuracion">
       <option name="closed" value="true" />
