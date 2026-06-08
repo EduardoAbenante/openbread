@@ -48,7 +48,7 @@ class FileService {
                 Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING)
             }
 
-            return "uploads/$entityFolder/$uniqueFileName"
+            return "/api/media/$entityFolder/$uniqueFileName"
         } catch (e: IOException) {
             throw RuntimeException("error.file.save_failed")
         }
@@ -68,7 +68,7 @@ class FileService {
 
             Files.write(destinationFile, bytes)
 
-            return "uploads/$entityFolder/$uniqueFileName"
+            return "/api/media/$entityFolder/$uniqueFileName"
         } catch (e: IOException) {
             throw RuntimeException("error.file.save_failed")
         }
@@ -76,8 +76,11 @@ class FileService {
 
     fun deleteFile(relativePath: String) {
         try {
-            val fullPath = Paths.get(relativePath).normalize().toAbsolutePath()
-            if (fullPath.toString().contains("uploads")) {
+            // Convertimos la URL virtual (/api/media/...) a ruta física (uploads/...)
+            val physicalPath = relativePath.removePrefix("/api/media/")
+            val fullPath = rootLocation.resolve(physicalPath).normalize().toAbsolutePath()
+            
+            if (fullPath.startsWith(rootLocation.toAbsolutePath())) {
                 Files.deleteIfExists(fullPath)
             }
         } catch (e: IOException) { }

@@ -7,10 +7,10 @@ import java.nio.file.Paths
 
 @Configuration
 class WebMvcConfig: WebMvcConfigurer {
-    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-        val uploadDir = Paths.get("uploads").toAbsolutePath().toUri().toString()
-
-        registry.addResourceHandler("/uploads/**").addResourceLocations(uploadDir)
-    }
+//    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+//        val uploadDir = Paths.get("uploads").toAbsolutePath().toUri().toString()
+//
+//        registry.addResourceHandler("/uploads/**").addResourceLocations(uploadDir)
+//    }
 
 }
