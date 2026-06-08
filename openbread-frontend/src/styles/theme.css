@@ -6,3 +6,12 @@
   --color-surface: #ffffff;
   --color-border: #e0d4c5;
 }
+
+@theme {
+  --color-bg: #f5f2ec;
+  --color-primary: #7b4b2a;
+  --color-primary-dark: #5a3419;
+  --color-text: #2b2118;
+  --color-surface: #ffffff;
+  --color-border: #e0d4c5;
+}
