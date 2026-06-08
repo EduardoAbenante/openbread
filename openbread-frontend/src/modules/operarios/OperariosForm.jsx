@@ -21,6 +21,41 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
 
   const [serverError, setServerError] = useState("");
   const photoUrl = watch("photoUrl");
+  const password = watch("password");
+  const nif = watch("nif");
+  const name = watch("name");
+  const surname = watch("surname");
+  const email = watch("email");
+
+  const getPasswordHelper = () => {
+    const requirements = [];
+    if (!password || password.length < 6) requirements.push("mín. 6 caracteres");
+    if (!password || !/[A-Z]/.test(password)) requirements.push("una mayúscula");
+    if (!password || !/\d/.test(password)) requirements.push("un número");
+    if (!password || !/[!@#$%^&*(),.?":{}|<>]/.test(password)) requirements.push("un carácter especial");
+    
+    if (requirements.length === 0) return "¡Contraseña segura!";
+    return "Falta: " + requirements.join(", ");
+  };
+
+  const getNifHelper = () => {
+    if (initial.id) return "";
+    const nifRegex = /^[0-9XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
+    if (!nif || !nifRegex.test(nif)) return "Formato: 8 números y letra final (o X/Y/Z inicial)";
+    return "Formato válido";
+  };
+
+  const getNameHelper = (val) => {
+    if (val && /\d/.test(val)) return "No se permiten números";
+    return "Solo letras permitidas";
+  };
+
+  const getEmailHelper = (val) => {
+    if (initial.id) return "";
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    if (!val || !emailRegex.test(val)) return "Ejemplo: usuario@dominio.com";
+    return "Formato correcto";
+  };
 
   const onFormSubmit = async (data) => {
     try {
@@ -57,8 +92,9 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
         )}
       </div>
 
-      <form onSubmit={handleSubmit(onFormSubmit)}>
-        <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-6 md:gap-10">
+      <form onSubmit={handleSubmit(onFormSubmit)} className="flex flex-col gap-6">
+        {/* Agregamos items-start al contenedor Grid para evitar deformaciones horizontales y estiramientos */}
+        <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-6 md:gap-10 items-start">
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
             
@@ -74,6 +110,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
                 }
               })}
               error={errors.nif?.message}
+              helperText={getNifHelper()}
               disabled={!!initial.id} 
             />
 
@@ -83,6 +120,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
               label="Rol *" 
               {...register("role", { required: "El rol es obligatorio" })}
               error={errors.role?.message}
+              helperText="Determina los permisos de acceso"
             >
               <option value="USER">Usuario estándar</option>
               <option value="ADMIN">Administrador</option>
@@ -100,6 +138,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
                 }
               })}
               error={errors.name?.message}
+              helperText={getNameHelper(name)}
             />
 
             {/* APELLIDOS */}
@@ -114,6 +153,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
                 }
               })}
               error={errors.surname?.message}
+              helperText={getNameHelper(surname)}
             />
 
             {/* EMAIL */}
@@ -130,6 +170,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
                 }
               })}
               error={errors.email?.message}
+              helperText={getEmailHelper(email)}
               disabled={!!initial.id} 
             />
 
@@ -152,6 +193,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
                 }
               })}
               error={errors.password?.message}
+              helperText={getPasswordHelper()}
             />
 
             {/* TELÉFONO */}
@@ -160,6 +202,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
               type="tel" 
               label="Teléfono" 
               {...register("phone")}
+              helperText="Mínimo 9 dígitos"
             />
 
             {/* CÓDIGO POSTAL */}
@@ -167,10 +210,12 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
               id="op-postal" 
               label="Código postal" 
               {...register("postalCode")}
+              helperText="Formato: 5 números"
             />
           </div>
 
-          <div className="flex flex-col gap-6 h-full">
+          {/* Columna Derecha aislada */}
+          <div className="w-full">
             <Controller
               name="photoFile"
               control={control}
@@ -183,18 +228,18 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
                 />
               )}
             />
-
-            <div className="flex justify-end gap-3 mt-auto pt-4 md:pt-0">
-              <Button type="button" variant="dangerGhost" onClick={onCancel}>
-                Cancelar
-              </Button>
-              
-              <Button type="submit">
-                Guardar operario
-              </Button>
-            </div>
           </div>
+        </div>
 
+        {/* CONTENEDOR DE BOTONES INDEPENDIENTE: Separado del flujo grid para anular el cambio de escala */}
+        <div className="flex justify-end gap-3 border-t border-[rgba(123,75,42,0.1)] pt-5 mt-2">
+          <Button type="button" variant="dangerGhost" onClick={onCancel}>
+            Cancelar
+          </Button>
+          
+          <Button type="submit">
+            Guardar operario
+          </Button>
         </div>
       </form>
     </div>

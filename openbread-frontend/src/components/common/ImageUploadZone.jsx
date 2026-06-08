@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import useAuthenticatedImage from '../../hooks/useAuthenticatedImage';
 
 export const ImageUploadZone = ({
@@ -11,18 +11,15 @@ export const ImageUploadZone = ({
   dimensionsText = "JPG, PNG o WEBP"
 }) => {
   const [isDragging, setIsDragging] = useState(false);
-
   const { imageUrl: authenticatedUrl, loading } = useAuthenticatedImage(existingImageUrl);
 
-  // 2. Adaptamos el previewUrl para que resuelva la ruta del servidor
   const previewUrl = useMemo(() => {
     if (selectedFile) {
-      return URL.createObjectURL(selectedFile); // Foto nueva local
+      return URL.createObjectURL(selectedFile);
     }
     return authenticatedUrl;
   }, [selectedFile, authenticatedUrl]);
 
-  // Manejadores de arrastre
   const handleDragOver = (e) => {
     e.preventDefault();
     setIsDragging(true);
@@ -51,11 +48,12 @@ export const ImageUploadZone = ({
   };
 
   return (
-    <div className="flex flex-col gap-3 flex-1">
+    <div className="flex flex-col gap-3 w-full">
       <span className="font-medium text-[var(--color-text)] opacity-70 text-[0.815rem]">{label}</span>
       
+      {/* Reemplazamos flex-1 por un alto estático h-[310px] para mantener simetría limpia con los inputs de la izquierda */}
       <label 
-        className={`flex flex-col items-center justify-center flex-1 min-h-[220px] border-2 border-dashed rounded-[0.75rem] cursor-pointer p-6 text-center transition-all duration-200 relative overflow-hidden box-border ${
+        className={`flex flex-col items-center justify-center h-[310px] w-full border-2 border-dashed rounded-[0.75rem] cursor-pointer p-6 text-center transition-all duration-200 relative overflow-hidden box-border ${
           isDragging 
             ? 'bg-[rgba(123,75,42,0.08)] border-[var(--color-primary)] scale-[0.99]' 
             : 'border-[rgba(123,75,42,0.18)] bg-[rgba(123,75,42,0.02)] hover:bg-[rgba(123,75,42,0.05)] hover:border-[var(--color-primary)]'
@@ -82,12 +80,10 @@ export const ImageUploadZone = ({
               src={previewUrl} 
               className="w-full h-full object-cover transition-transform duration-200 hover:scale-[1.02]" 
               alt={label}
-              // 3. Control de seguridad por si la imagen se borra físicamente en el servidor
               onError={(e) => {
                 e.target.src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
               }}
             />
-            {/* Capa de hover oscura estilizada con Tailwind */}
             <div className="absolute inset-0 bg-[rgba(40,25,15,0.6)] flex items-center justify-center text-white text-[0.875rem] font-semibold opacity-0 transition-opacity duration-200 hover:opacity-100">
               <span className="text-white">Cambiar imagen</span>
             </div>

@@ -5,6 +5,10 @@
   --animate-ob-fade-out: obFadeOut 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-ob-slide-up: obSlideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   --animate-ob-slide-down: obSlideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-ob-slide-in-top: obSlideInTop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  
+  /* NUEVA ANIMACIÓN FLUIDA INTEGRADA EN TAILWIND v4 */
+  --animate-ob-slide-fade-down: obSlideFadeDown 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
   @keyframes obFadeIn {
     from { opacity: 0; }
@@ -22,10 +26,26 @@
     from { opacity: 1; transform: translateY(0) scale(1); }
     to { opacity: 0; transform: translateY(15px) scale(0.98); }
   }
+  @keyframes obSlideInTop {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* KEYFRAMES CUSTOM PARA TEXTO DE AYUDA */
+  @keyframes obSlideFadeDown {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 html {
-  font-size: 18px; /* Aumentamos el tamaño base de 16px a 18px */
+  font-size: 18px;
 }
 
 body {
@@ -81,20 +101,26 @@ h1 {
   font-size: 56px;
   letter-spacing: -1.68px;
   margin: 32px 0;
-  @media (max-width: 1024px) {
+}
+@media (max-width: 1024px) {
+  h1 {
     font-size: 36px;
     margin: 20px 0;
   }
 }
+
 h2 {
   font-size: 24px;
   line-height: 118%;
   letter-spacing: -0.24px;
   margin: 0 0 8px;
-  @media (max-width: 1024px) {
+}
+@media (max-width: 1024px) {
+  h2 {
     font-size: 20px;
   }
 }
+
 p {
   margin: 0;
 }
