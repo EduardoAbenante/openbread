@@ -1,5 +1,6 @@
 package com.eab.openbread.domain.service
 
+import com.eab.openbread.domain.ImageProfile
 import com.eab.openbread.domain.exception.DuplicateResourceException
 import com.eab.openbread.domain.exception.ResourceNotFoundException
 import com.eab.openbread.domain.repository.UserRepository
@@ -22,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile
 class UserService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val fileService: FileService
+    private val mediaService: MediaService
 ) {
     //CRUD Create Read Update Delete
     private val logger = LoggerFactory.getLogger(UserService::class.java)
@@ -220,7 +221,11 @@ class UserService(
                 ResourceNotFoundException("error.user.not_found")
             }
 
-        val savedRelativePath = fileService.saveFile(file, "avatars")
+        user.photoUrl?.let { oldPath ->
+            mediaService.deleteMedia(oldPath)
+        }
+
+        val savedRelativePath = mediaService.processAndSaveImage(file, ImageProfile.AVATAR)
 
         user.photoUrl = savedRelativePath
         userRepository.save(user)

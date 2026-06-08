@@ -8,6 +8,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.util.UUID
+import kotlin.math.log
 
 @Service
 class FileService {
@@ -53,4 +54,33 @@ class FileService {
         }
 
     }
+
+    fun saveFileFromBytes(bytes: ByteArray, originalFilename: String, entityFolder: String): String {
+        try {
+            val targetDirectory = rootLocation.resolve(entityFolder)
+            if (!Files.exists(targetDirectory)) {
+                Files.createDirectories(targetDirectory)
+            }
+
+            val originalExtension = originalFilename.substringAfterLast(".", "jpg")
+            val uniqueFileName = "${UUID.randomUUID()}.$originalExtension"
+            val destinationFile = targetDirectory.resolve(uniqueFileName).normalize().toAbsolutePath()
+
+            Files.write(destinationFile, bytes)
+
+            return "uploads/$entityFolder/$uniqueFileName"
+        } catch (e: IOException) {
+            throw RuntimeException("error.file.save_failed")
+        }
+    }
+
+    fun deleteFile(relativePath: String) {
+        try {
+            val fullPath = Paths.get(relativePath).normalize().toAbsolutePath()
+            if (fullPath.toString().contains("uploads")) {
+                Files.deleteIfExists(fullPath)
+            }
+        } catch (e: IOException) { }
+    }
+
 }
