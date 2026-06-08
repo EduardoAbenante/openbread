@@ -1,6 +1,5 @@
-import { useMemo, useState } from 'react';
-// 1. Importamos la URL base del backend desde tu axiosConfig
-import { BACKEND_URL } from '../../api/axiosConfig';
+import { useMemo, useState, useEffect } from 'react';
+import useAuthenticatedImage from '../../hooks/useAuthenticatedImage';
 
 export const ImageUploadZone = ({
   label = "Foto de perfil",
@@ -13,23 +12,15 @@ export const ImageUploadZone = ({
 }) => {
   const [isDragging, setIsDragging] = useState(false);
 
+  const { imageUrl: authenticatedUrl, loading } = useAuthenticatedImage(existingImageUrl);
+
   // 2. Adaptamos el previewUrl para que resuelva la ruta del servidor
   const previewUrl = useMemo(() => {
     if (selectedFile) {
       return URL.createObjectURL(selectedFile); // Foto nueva local
     }
-    if (existingImageUrl) {
-      // Si la URL ya viene con http:// (por si acaso) la dejamos, si no, le concatenamos tu Spring Boot
-      // Aseguramos que haya una barra entre la URL base y la ruta relativa
-      const baseUrl = BACKEND_URL.endsWith('/') ? BACKEND_URL : `${BACKEND_URL}/`;
-      const relativePath = existingImageUrl.startsWith('/') ? existingImageUrl.substring(1) : existingImageUrl;
-      
-      return existingImageUrl.startsWith('http') 
-        ? existingImageUrl 
-        : `${baseUrl}${relativePath}`; // Foto existente en el backend
-    }
-    return null;
-  }, [selectedFile, existingImageUrl]);
+    return authenticatedUrl;
+  }, [selectedFile, authenticatedUrl]);
 
   // Manejadores de arrastre
   const handleDragOver = (e) => {
@@ -80,7 +71,12 @@ export const ImageUploadZone = ({
           className="hidden"
         />
         
-        {previewUrl ? (
+        {loading ? (
+          <div className="flex flex-col items-center gap-2">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-primary)]"></div>
+            <p className="text-[0.875rem] text-[var(--color-text)] opacity-50">Cargando imagen...</p>
+          </div>
+        ) : previewUrl ? (
           <div className="w-full h-full absolute inset-0">
             <img 
               src={previewUrl} 
