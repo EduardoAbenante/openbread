@@ -1,54 +1,45 @@
 import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { ImageUploadZone } from '../../components/common/ImageUploadZone';
 import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
 import Select from "../../components/ui/Select";
 
 export default function OperariosForm({ initial, onSubmit, onCancel }) {
-  const [form, setForm] = useState(() => {
-    return {
+  const { register, handleSubmit, control, setValue, watch, formState: { errors } } = useForm({
+    defaultValues: {
       ...initial,
+      name: initial.name || initial.nombre || "",
+      surname: initial.surname || initial.apellido || "",
+      phone: initial.phone || initial.telefono || "",
+      postalCode: initial.postalCode || initial.cp || "",
       role: initial.role || "USER",
       photoFile: null,
-      // Aseguramos que photoUrl esté presente si photoName existe, por si acaso initial vino incompleto
-      // Usamos 'avatar' como entidad según StorageConfig.kt
       photoUrl: initial.photoUrl || (initial.photoName ? `/api/media/avatar/${initial.photoName}` : null)
-    };
+    }
   });
 
-  const [error, setError] = useState("");
+  const [serverError, setServerError] = useState("");
+  const photoUrl = watch("photoUrl");
 
-  const update = (field, value) => setForm({ ...form, [field]: value });
-
-  const handleSubmit = async () => {
-    if (!form.nif?.trim()) return setError("El NIF es obligatorio");
-    if (!form.name?.trim()) return setError("El nombre es obligatorio");
-    if (!form.surname?.trim()) return setError("Los apellidos son obligatorios");
-    if (!form.email?.trim()) return setError("El correo es obligatorio");
-    if (!initial.id && !form.password?.trim()) return setError("La contraseña es obligatoria");
-
+  const onFormSubmit = async (data) => {
     try {
-      setError(""); // Limpiamos errores previos antes de enviar
-      const result = await onSubmit(form); // Llama a handleSave de OperariosPage
+      setServerError("");
+      const result = await onSubmit(data);
       
-      // Si el servidor nos devuelve datos actualizados (por ejemplo, el nuevo photoName), actualizamos el formulario local
       if (result && (result.photoName || result.avatarUrl)) {
         const photoName = result.photoName || result.avatarUrl?.split('/').pop();
-        setForm(prev => ({
-          ...prev,
-          photoName: photoName,
-          photoUrl: `/api/media/avatar/${photoName}`,
-          photoFile: null // Limpiamos el archivo pendiente de subir
-        }));
+        setValue("photoName", photoName);
+        setValue("photoUrl", `/api/media/avatar/${photoName}`);
+        setValue("photoFile", null);
       }
     } catch (err) {
-      // Captura tanto errores de validación de Spring Boot (@Valid) como fallos de red
       const serverMessage = err.response?.data?.message || err.response?.data?.error;
       const validationErrors = err.response?.data?.errors 
         ? Object.entries(err.response.data.errors).map(([k, v]) => `${k}: ${v}`).join(", ") 
         : null;
           
-      setError(serverMessage || validationErrors || "Error inesperado al conectar con el servidor de OpenBread");
+      setServerError(serverMessage || validationErrors || "Error inesperado al conectar con el servidor de OpenBread");
     }
   };
 
@@ -59,14 +50,14 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
         <h2 className="text-[1.25rem] font-semibold text-[var(--color-primary)] m-0 uppercase tracking-[0.02em]">
           {initial.id ? "Editar usuario" : "Nuevo usuario"}
         </h2>
-        {error && (
+        {serverError && (
           <p className="text-[#b00020] bg-[rgba(176,0,32,0.05)] p-3 rounded-0.5rem font-medium text-[0.875rem] mt-3 rounded-[0.5rem]">
-            {error}
+            {serverError}
           </p>
         )}
       </div>
 
-      <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+      <form onSubmit={handleSubmit(onFormSubmit)}>
         <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-6 md:gap-10">
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
@@ -75,19 +66,23 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
             <Input 
               id="op-nif" 
               label="NIF *" 
-              value={form.nif || ""} 
-              onChange={(e) => update("nif", e.target.value)} 
+              {...register("nif", { 
+                required: "El NIF es obligatorio",
+                pattern: {
+                  value: /^[0-9XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i,
+                  message: "Formato de NIF o NIE no válido"
+                }
+              })}
+              error={errors.nif?.message}
               disabled={!!initial.id} 
-              required 
             />
 
             {/* ROL */}
             <Select 
               id="op-role" 
               label="Rol *" 
-              value={form.role} 
-              onChange={(e) => update("role", e.target.value)} 
-              required
+              {...register("role", { required: "El rol es obligatorio" })}
+              error={errors.role?.message}
             >
               <option value="USER">Usuario estándar</option>
               <option value="ADMIN">Administrador</option>
@@ -97,18 +92,28 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
             <Input 
               id="op-name" 
               label="Nombre *" 
-              value={form.name || form.nombre || ""} 
-              onChange={(e) => update("name", e.target.value)} 
-              required 
+              {...register("name", { 
+                required: "El nombre es obligatorio",
+                pattern: {
+                  value: /^[^0-9]+$/,
+                  message: "El nombre no puede contener números"
+                }
+              })}
+              error={errors.name?.message}
             />
 
             {/* APELLIDOS */}
             <Input 
               id="op-surname" 
               label="Apellidos *" 
-              value={form.surname || form.apellido || ""} 
-              onChange={(e) => update("surname", e.target.value)} 
-              required 
+              {...register("surname", { 
+                required: "Los apellidos son obligatorios",
+                pattern: {
+                  value: /^[^0-9]+$/,
+                  message: "Los apellidos no pueden contener números"
+                }
+              })}
+              error={errors.surname?.message}
             />
 
             {/* EMAIL */}
@@ -117,10 +122,15 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
               type="email" 
               label="Correo electrónico *" 
               className="sm:col-span-2" 
-              value={form.email || ""} 
-              onChange={(e) => update("email", e.target.value)} 
+              {...register("email", { 
+                required: "El correo es obligatorio",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Correo electrónico no válido"
+                }
+              })}
+              error={errors.email?.message}
               disabled={!!initial.id} 
-              required 
             />
 
             {/* CONTRASEÑA */}
@@ -130,9 +140,18 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
                 type="password" 
                 label="Contraseña *" 
                 className="sm:col-span-2" 
-                value={form.password || ""} 
-                onChange={(e) => update("password", e.target.value)} 
-                required 
+                {...register("password", { 
+                  required: "La contraseña es obligatoria",
+                  minLength: {
+                    value: 4,
+                    message: "Mínimo 4 caracteres"
+                  },
+                  validate: {
+                    hasUpperCase: (v) => /[A-Z]/.test(v) || "Debe tener al menos una mayúscula",
+                    hasSpecialChar: (v) => /[!@#$%^&*(),.?":{}|<>]/.test(v) || "Debe tener al menos un carácter especial"
+                  }
+                })}
+                error={errors.password?.message}
               />
             )}
 
@@ -141,25 +160,29 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
               id="op-phone" 
               type="tel" 
               label="Teléfono" 
-              value={form.phone || form.telefono || ""} 
-              onChange={(e) => update("phone", e.target.value)} 
+              {...register("phone")}
             />
 
             {/* CÓDIGO POSTAL */}
             <Input 
               id="op-postal" 
               label="Código postal" 
-              value={form.postalCode || form.cp || ""} 
-              onChange={(e) => update("postalCode", e.target.value)} 
+              {...register("postalCode")}
             />
           </div>
 
           <div className="flex flex-col gap-6 h-full">
-            <ImageUploadZone 
-              label="Foto de perfil"
-              selectedFile={form.photoFile}
-              existingImageUrl={form.photoUrl} 
-              onFileChange={(file) => update("photoFile", file)}
+            <Controller
+              name="photoFile"
+              control={control}
+              render={({ field }) => (
+                <ImageUploadZone 
+                  label="Foto de perfil"
+                  selectedFile={field.value}
+                  existingImageUrl={photoUrl} 
+                  onFileChange={field.onChange}
+                />
+              )}
             />
 
             <div className="flex justify-end gap-3 mt-auto pt-4 md:pt-0">
