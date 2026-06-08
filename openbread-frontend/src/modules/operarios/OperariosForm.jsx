@@ -5,10 +5,15 @@ import Input from "../../components/ui/Input";
 import Select from "../../components/ui/Select";
 
 export default function OperariosForm({ initial, onSubmit, onCancel }) {
-  const [form, setForm] = useState({
-    ...initial,
-    role: initial.role || "USER",
-    photoFile: null
+  const [form, setForm] = useState(() => {
+    return {
+      ...initial,
+      role: initial.role || "USER",
+      photoFile: null,
+      // Aseguramos que photoUrl esté presente si photoName existe, por si acaso initial vino incompleto
+      // Usamos 'avatar' como entidad según StorageConfig.kt
+      photoUrl: initial.photoUrl || (initial.photoName ? `/api/media/avatar/${initial.photoName}` : null)
+    };
   });
 
   const [error, setError] = useState("");
@@ -24,7 +29,18 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
 
     try {
       setError(""); // Limpiamos errores previos antes de enviar
-      await onSubmit(form); // Llama a handleSave de OperariosPage
+      const result = await onSubmit(form); // Llama a handleSave de OperariosPage
+      
+      // Si el servidor nos devuelve datos actualizados (por ejemplo, el nuevo photoName), actualizamos el formulario local
+      if (result && (result.photoName || result.avatarUrl)) {
+        const photoName = result.photoName || result.avatarUrl?.split('/').pop();
+        setForm(prev => ({
+          ...prev,
+          photoName: photoName,
+          photoUrl: `/api/media/avatar/${photoName}`,
+          photoFile: null // Limpiamos el archivo pendiente de subir
+        }));
+      }
     } catch (err) {
       // Captura tanto errores de validación de Spring Boot (@Valid) como fallos de red
       const serverMessage = err.response?.data?.message || err.response?.data?.error;
@@ -81,7 +97,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
             <Input 
               id="op-name" 
               label="Nombre *" 
-              value={form.name || ""} 
+              value={form.name || form.nombre || ""} 
               onChange={(e) => update("name", e.target.value)} 
               required 
             />
@@ -90,7 +106,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
             <Input 
               id="op-surname" 
               label="Apellidos *" 
-              value={form.surname || ""} 
+              value={form.surname || form.apellido || ""} 
               onChange={(e) => update("surname", e.target.value)} 
               required 
             />
@@ -125,7 +141,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
               id="op-phone" 
               type="tel" 
               label="Teléfono" 
-              value={form.phone || ""} 
+              value={form.phone || form.telefono || ""} 
               onChange={(e) => update("phone", e.target.value)} 
             />
 
@@ -133,7 +149,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
             <Input 
               id="op-postal" 
               label="Código postal" 
-              value={form.postalCode || ""} 
+              value={form.postalCode || form.cp || ""} 
               onChange={(e) => update("postalCode", e.target.value)} 
             />
           </div>

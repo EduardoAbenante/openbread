@@ -56,7 +56,16 @@ export default function OperariosPage() {
     try {
       // Consume el endpoint: /user/users?search=...&active=...
       const data = await getOperarios(queryParams);
-      setOperarios(data);
+      
+      // Enriquecemos los datos para que el formulario sepa dónde buscar la imagen física
+      const mapped = data.map(op => ({
+        ...op,
+        // Si photoUrl ya viene del backend (como /api/media/avatar/xxx), lo usamos. 
+        // Si no, lo construimos si photoName existe.
+        photoUrl: op.photoUrl || (op.photoName ? `/api/media/avatar/${op.photoName}` : null)
+      }));
+
+      setOperarios(mapped);
     } catch (error) {
       console.error("Error al consultar los operarios en OpenBread:", error);
     } finally {
@@ -102,12 +111,14 @@ export default function OperariosPage() {
       }
 
       // 2. Si Spring Boot procesó el usuario correctamente y hay una foto en cola, la subimos
+      let updatedUser = null;
       if (data.photoFile && userId) {
-        await uploadOperarioAvatar(userId, data.photoFile);
+        updatedUser = await uploadOperarioAvatar(userId, data.photoFile);
       }
 
       setEditing(null);
       load(); // Recarga la cuadrícula con el nuevo operario y su miniatura actualizada
+      return updatedUser;
     } catch (error) {
       console.error("Error al guardar el operario o su avatar:", error);
       // Lanza el error hacia el formulario para que el bloque catch de OperariosForm lo muestre en pantalla
@@ -188,6 +199,7 @@ export default function OperariosPage() {
       <Modal isOpen={Boolean(editing)}>
         {editing && (
           <OperariosForm
+            key={editing.id || "new"}
             initial={editing}
             onSubmit={handleSave}
             onCancel={() => setEditing(null)}

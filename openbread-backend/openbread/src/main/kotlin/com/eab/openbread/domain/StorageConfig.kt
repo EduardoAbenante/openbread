@@ -1,9 +1,5 @@
 package com.eab.openbread.domain
 
-import org.springframework.stereotype.Component
-
-
-@Component
 enum class ImageProfile(
     val folderName: String,
     val maxWidth: Int,
