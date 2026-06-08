@@ -142,7 +142,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
             <ImageUploadZone 
               label="Foto de perfil"
               selectedFile={form.photoFile}
-              existingImageUrl={form.avatarUrl} 
+              existingImageUrl={form.photoUrl} 
               onFileChange={(file) => update("photoFile", file)}
             />
 

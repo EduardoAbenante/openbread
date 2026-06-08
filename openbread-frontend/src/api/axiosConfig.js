@@ -1,19 +1,20 @@
 import axios from "axios";
 
+export const BACKEND_URL = "http://localhost:8080"; 
+
 const api = axios.create({
-  baseURL: "http://localhost:8080", 
+  baseURL: BACKEND_URL, 
 });
 
 api.interceptors.request.use(
   (config) => {
-    // No enviar token en login
+    // No enviar token en las rutas públicas de autenticación
     if (!config.url.includes("/auth/login")) {
       const token = localStorage.getItem("token");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
-
     return config;
   },
   (error) => Promise.reject(error)
@@ -25,19 +26,19 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Si el token está caducado → 403
+    // Si el token está caducado o no es válido (Spring Security suele lanzar 403 Forbidden)
     if (error.response?.status === 403) {
-      console.warn("Token expirado. Cerrando sesión…");
+      console.warn("Sesión inválida o token expirado. Cerrando sesión…");
 
-      // Evitar loops infinitos
+      // Evitar loops infinitos en reintentos
       if (!originalRequest._retry) {
         originalRequest._retry = true;
       }
 
-      // Limpiar sesión
+      // Limpiar datos de sesión del navegador
       localStorage.removeItem("token");
 
-      // Redirigir al login
+      // Redirigir de forma segura al login
       window.location.href = "/login";
     }
 
@@ -45,4 +46,5 @@ api.interceptors.response.use(
   }
 );
 
+// 3. Exportación por defecto de la instancia configurada
 export default api;
