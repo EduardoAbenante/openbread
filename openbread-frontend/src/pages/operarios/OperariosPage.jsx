@@ -13,6 +13,8 @@ import {
   getOperarios,
   createOperario,
   updateOperario,
+  updateOperarioRole,
+  updateOperarioPassword,
   uploadOperarioAvatar,
   activateOperario,
   deleteOperario
@@ -101,23 +103,36 @@ export default function OperariosPage() {
     try {
       let userId = payload.id;
 
-      // 1. Persistencia de datos de texto planos
       if (payload.id) {
-        // Tu PUT devuelve ResponseEntity<Long>
+        // EDICIÓN: Detección de cambios por campos específicos (Rol y Contraseña)
+        const initialUser = operarios.find(o => o.id === payload.id);
+        
+        // 1. Actualizar datos básicos (Nombre, Apellido, Teléfono, CP)
         userId = await updateOperario(payload.id, payload);
+
+        // 2. Si el ROL ha cambiado, llamar al endpoint de rol
+        if (initialUser && payload.role !== initialUser.role) {
+          await updateOperarioRole(payload.id, payload.role);
+        }
+
+        // 3. Si se ha introducido una contraseña, llamar al endpoint de password
+        if (payload.password && payload.password.trim() !== "") {
+          await updateOperarioPassword(payload.id, payload.password);
+        }
+
       } else {
-        // Tu POST devuelve ResponseEntity<Long>
+        // CREACIÓN: Se crea el usuario con todo (el backend lo procesa en una llamada inicial)
         userId = await createOperario(payload);
       }
 
-      // 2. Si Spring Boot procesó el usuario correctamente y hay una foto en cola, la subimos
+      // 4. Si hay una foto en cola, la subimos
       let updatedUser = null;
       if (data.photoFile && userId) {
         updatedUser = await uploadOperarioAvatar(userId, data.photoFile);
       }
 
       setEditing(null);
-      load(); // Recarga la cuadrícula con el nuevo operario y su miniatura actualizada
+      load(); // Recarga la cuadrícula
       return updatedUser;
     } catch (error) {
       console.error("Error al guardar el operario o su avatar:", error);

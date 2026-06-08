@@ -134,26 +134,25 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
             />
 
             {/* CONTRASEÑA */}
-            {!initial.id && (
-              <Input 
-                id="op-pass" 
-                type="password" 
-                label="Contraseña *" 
-                className="sm:col-span-2" 
-                {...register("password", { 
-                  required: "La contraseña es obligatoria",
-                  minLength: {
-                    value: 4,
-                    message: "Mínimo 4 caracteres"
-                  },
-                  validate: {
-                    hasUpperCase: (v) => /[A-Z]/.test(v) || "Debe tener al menos una mayúscula",
-                    hasSpecialChar: (v) => /[!@#$%^&*(),.?":{}|<>]/.test(v) || "Debe tener al menos un carácter especial"
-                  }
-                })}
-                error={errors.password?.message}
-              />
-            )}
+            <Input 
+              id="op-pass" 
+              type="password" 
+              label={initial.id ? "Nueva contraseña (opcional)" : "Contraseña *"} 
+              className="sm:col-span-2" 
+              {...register("password", { 
+                required: initial.id ? false : "La contraseña es obligatoria",
+                minLength: {
+                  value: 6,
+                  message: "Mínimo 6 caracteres"
+                },
+                validate: {
+                  hasUpperCase: (v) => !v || /[A-Z]/.test(v) || "Debe tener al menos una mayúscula",
+                  hasNumber: (v) => !v || /\d/.test(v) || "Debe tener al menos un número",
+                  hasSpecialChar: (v) => !v || /[!@#$%^&*(),.?":{}|<>]/.test(v) || "Debe tener al menos un carácter especial"
+                }
+              })}
+              error={errors.password?.message}
+            />
 
             {/* TELÉFONO */}
             <Input 
