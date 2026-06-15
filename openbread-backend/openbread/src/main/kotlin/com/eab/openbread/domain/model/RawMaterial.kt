@@ -17,14 +17,14 @@ class RawMaterial(
     val id: Long = 0,
 
     @Column(unique = true, length = 50)
-    val name: String,
+    var name: String,
 
     @Column(length = 200)
-    val description: String? = null,
+    var description: String? = null,
 
-    val active: Boolean = true,
+    var active: Boolean = true,
 
-    val photoUrl: String? = null,
+    var photoUrl: String? = null,
 
     @ManyToOne
     @JoinColumn(name = "category_id")
