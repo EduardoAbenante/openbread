@@ -33,8 +33,17 @@ class RawMaterialService(
             throw DuplicateResourceException("error.material.name_exists")
         }
         try {
-            val newMaterial = materialDTO.toEntity()
-            val savedMaterial = newMaterial
+            val cat = materialDTO.categoryId?.let { id ->
+                materialCategoryRepository.findById(id).orElseThrow {
+                    logger.info("Material creation failed: categoryId=$id not found")
+                    ResourceNotFoundException("error.material.category_not_found")
+                }
+            }
+
+            var newMaterial = materialDTO.toEntity()
+            newMaterial.category = cat
+
+            val savedMaterial = materialRepository.save(newMaterial)
             logger.info("Material created successfully with id=${savedMaterial.id}")
             return savedMaterial.id
         } catch (e: DataIntegrityViolationException) {

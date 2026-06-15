@@ -29,4 +29,4 @@ class RawMaterial(
     @ManyToOne
     @JoinColumn(name = "category_id")
     var category: MaterialCategory? = null
-)
+): BaseAuditEntity()

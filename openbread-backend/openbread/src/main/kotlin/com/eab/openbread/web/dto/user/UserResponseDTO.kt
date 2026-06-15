@@ -14,7 +14,9 @@ data class UserResponseDTO (
     val postalCode: String?,
     val role: Role,
     val active: Boolean,
-    val photoUrl: String?
+    val photoUrl: String?,
+    val createdAt: String? = null,
+    val updatedAt: String? = null
 )
 
 fun toUserResponseDTO(user: User): UserResponseDTO {
@@ -28,7 +30,9 @@ fun toUserResponseDTO(user: User): UserResponseDTO {
         postalCode = user.postalCode,
         role = user.role,
         active = user.active,
-        photoUrl = user.photoUrl
+        photoUrl = user.photoUrl,
+        createdAt = user.createdAt?.toString(),
+        updatedAt = user.updatedAt?.toString(),
     )
     return newDTO
 }

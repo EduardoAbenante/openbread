@@ -23,4 +23,4 @@ class MaterialCategory(
 
     val active: Boolean = true
 
-)
+): BaseAuditEntity()

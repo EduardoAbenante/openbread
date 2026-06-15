@@ -38,7 +38,7 @@ class User(
 
     @Column(nullable = false)
     var active: Boolean = true
-)
+): BaseAuditEntity()
 
 enum class Role {
     ADMIN, USER

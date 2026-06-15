@@ -9,7 +9,9 @@ class MaterialResponseDTO (
     var categoryId: Long?,
     var categoryName: String?,
     var photoUrl: String?,
-    var active: Boolean
+    var active: Boolean,
+    var createdAt: String? = null,
+    var updatedAt: String? = null
 )
 
 fun toDTO(entity: RawMaterial): MaterialResponseDTO {
@@ -20,7 +22,9 @@ fun toDTO(entity: RawMaterial): MaterialResponseDTO {
         categoryId = entity.category?.id,
         categoryName = entity.category?.name,
         photoUrl = entity.photoUrl,
-        active = entity.active
+        active = entity.active,
+        createdAt = entity.createdAt?.toString(),
+        updatedAt = entity.updatedAt?.toString(),
     )
     return newDTO
 }
