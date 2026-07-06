@@ -27,7 +27,7 @@ jobs:
           cache-dependency-path: openbread-frontend/package-lock.json
 
       - name: Backend - Gradle wrapper permissions
-        run: chmod +x openbread-backend/gradlew
+        run: chmod +x ./openbread-backend/openbread/gradlew
 
       - name: Frontend - install
         working-directory: openbread-frontend
@@ -38,9 +38,9 @@ jobs:
         run: npm run build
 
       - name: Backend - test
-        working-directory: openbread-backend
+        working-directory: openbread-backend/openbread
         run: ./gradlew test
 
       - name: Backend - build
-        working-directory: openbread-backend
+        working-directory: openbread-backend/openbread
         run: ./gradlew build -x test
