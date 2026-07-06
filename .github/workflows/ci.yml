@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Backend - Gradle wrapper permissions
+        run: chmod +x openbread-backend/gradlew
+
+      - name: Frontend - install
+        working-directory: openbread-frontend
+        run: npm ci
+
+      - name: Frontend - build
+        working-directory: openbread-frontend
+        run: npm run build
+
+      - name: Backend - test
+        working-directory: openbread-backend
+        run: ./gradlew test
+
+      - name: Backend - build
+        working-directory: openbread-backend
+        run: ./gradlew build -x test
