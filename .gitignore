@@ -2,3 +2,7 @@ openbread-backend/uploads/*
 .idea/*
 .idea/gradle.xml
 .idea/workspace.xml
+
+.env
+.local
+.env.local
