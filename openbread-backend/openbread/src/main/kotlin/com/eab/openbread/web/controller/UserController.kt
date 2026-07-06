@@ -1,7 +1,7 @@
 package com.eab.openbread.web.controller
 
-import com.eab.openbread.domain.model.User
 import com.eab.openbread.domain.service.UserService
+import com.eab.openbread.web.dto.user.AvatarUploadResponseDTO
 import com.eab.openbread.web.dto.user.UserCreateDTO
 import com.eab.openbread.web.dto.user.UserPasswordUpdateDTO
 import com.eab.openbread.web.dto.user.UserResponseDTO
@@ -22,11 +22,11 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 class UserController(
     private val userService: UserService
 ) {
-    @PostMapping()
+    @PostMapping
     fun createUser(
         @Valid @RequestBody user: UserCreateDTO,
     ): ResponseEntity<Long> {
@@ -34,8 +34,8 @@ class UserController(
         return ResponseEntity.ok(newUserId)
     }
 
-    @GetMapping("/users")
-    fun findUsers(
+    @GetMapping
+    fun listUsers(
         @RequestParam(required = false) search: String?,
         @RequestParam(required = false) active: Boolean?
     ): ResponseEntity<List<UserResponseDTO>> {
@@ -70,13 +70,13 @@ class UserController(
         return ResponseEntity.ok(updatedId)
     }
 
-    @PostMapping("/{id}/photo")
+    @PostMapping("/{id}/avatar")
     fun updateUserAvatar(
         @PathVariable id: Long,
-        @RequestParam("photoFile") file: MultipartFile,
-    ): ResponseEntity<Map<String, String?>>{
+        @RequestParam("avatarFile") file: MultipartFile,
+    ): ResponseEntity<AvatarUploadResponseDTO> {
         val avatarUrl = userService.updateUploadedAvatar(id, file)
-        return ResponseEntity.ok(mapOf("avatarUrl" to avatarUrl))
+        return ResponseEntity.ok(AvatarUploadResponseDTO(avatarUrl = avatarUrl))
     }
 
     @DeleteMapping("/{id}")
