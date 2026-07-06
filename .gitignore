@@ -1,4 +1,6 @@
 openbread-backend/uploads/*
+openbread-backend/.vscode
+
 .idea/*
 .idea/gradle.xml
 .idea/workspace.xml
