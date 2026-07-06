@@ -1,15 +1,16 @@
 package com.eab.openbread.domain.service
 
-import com.sun.org.apache.xml.internal.security.algorithms.SignatureAlgorithm
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.util.Date
 
 @Service
-class JwtService {
-    private val secret = "MI_SECRETO_SUPER_SEGURO_123456789_MI_SECRETO_SUPER_SEGURO"
-    private val key = Keys.hmacShaKeyFor(secret.toByteArray())
+class JwtService(
+    @Value("\${JWT_SECRET:change-me-in-windows.env}") private val secret: String
+) {
+    private val key by lazy { Keys.hmacShaKeyFor(secret.toByteArray()) }
 
     fun generateToken(email: String): String {
         val now = Date()

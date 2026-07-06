@@ -1,5 +1,5 @@
 openbread-backend/uploads/*
-openbread-backend/.vscode
+openbread-backend/.vscode/*
 
 .idea/*
 .idea/gradle.xml

@@ -1,7 +1,7 @@
 package com.eab.openbread
 
+import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 
 @SpringBootApplication
@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 class OpenbreadApplication
 
 fun main(args: Array<String>) {
-	runApplication<OpenbreadApplication>(*args)
+	SpringApplication.run(OpenbreadApplication::class.java, *args)
 }
