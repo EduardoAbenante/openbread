@@ -24,6 +24,7 @@ jobs:
         with:
           node-version: '24'
           cache: 'npm'
+          cache-dependency-path: openbread-frontend/package-lock.json
 
       - name: Backend - Gradle wrapper permissions
         run: chmod +x openbread-backend/gradlew
