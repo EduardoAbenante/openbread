@@ -8,10 +8,14 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    // No enviar token en las rutas públicas de autenticación
-    if (!config.url.includes("/auth/login")) {
+    // Enviar token en todas las rutas excepto las públicas
+    const publicRoutes = ['/auth/login'];
+    const isPublicRoute = publicRoutes.some(route => config.url?.includes(route));
+    
+    if (!isPublicRoute) {
       const token = localStorage.getItem("token");
       if (token) {
+        config.headers = config.headers || {};
         config.headers.Authorization = `Bearer ${token}`;
       }
     }

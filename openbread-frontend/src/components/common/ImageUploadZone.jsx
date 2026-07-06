@@ -11,12 +11,16 @@ export const ImageUploadZone = ({
   dimensionsText = "JPG, PNG o WEBP"
 }) => {
   const [isDragging, setIsDragging] = useState(false);
+  console.log('[ImageUploadZone] Renderizando. existingImageUrl=', existingImageUrl);
   const { imageUrl: authenticatedUrl, loading } = useAuthenticatedImage(existingImageUrl);
+  console.log('[ImageUploadZone] authenticatedUrl=', authenticatedUrl, 'loading=', loading);
 
   const previewUrl = useMemo(() => {
     if (selectedFile) {
+      console.log('[ImageUploadZone useMemo] Usando archivo seleccionado');
       return URL.createObjectURL(selectedFile);
     }
+    console.log('[ImageUploadZone useMemo] Usando authenticatedUrl:', authenticatedUrl);
     return authenticatedUrl;
   }, [selectedFile, authenticatedUrl]);
 

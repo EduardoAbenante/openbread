@@ -226,9 +226,13 @@ class UserService(
         }
 
         val savedRelativePath = mediaService.processAndSaveImage(file, ImageProfile.AVATAR)
+        logger.info("Image saved at path: $savedRelativePath")
 
         user.photoUrl = savedRelativePath
-        userRepository.save(user)
+        logger.info("User photoUrl before save: ${user.photoUrl}")
+        
+        val savedUser = userRepository.save(user)
+        logger.info("User saved successfully. PhotoUrl after save: ${savedUser.photoUrl}")
 
         logger.info("Avatar updated successfully for user with id=$id")
         return savedRelativePath

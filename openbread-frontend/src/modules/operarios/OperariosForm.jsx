@@ -6,6 +6,7 @@ import Input from "../../components/ui/Input";
 import Select from "../../components/ui/Select";
 
 export default function OperariosForm({ initial, onSubmit, onCancel }) {
+  console.log('[OperariosForm] Renderizando con initial=', initial);
   const { register, handleSubmit, control, setValue, watch, formState: { errors } } = useForm({
     defaultValues: {
       ...initial,
@@ -15,9 +16,10 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
       postalCode: initial.postalCode || initial.cp || "",
       role: initial.role || "USER",
       photoFile: null,
-      photoUrl: initial.photoUrl || (initial.photoName ? `/api/media/avatar/${initial.photoName}` : null)
+      photoUrl: initial.photoUrl || null
     }
   });
+  console.log('[OperariosForm] photoUrl del formulario=', initial.photoUrl);
 
   const [serverError, setServerError] = useState("");
   const photoUrl = watch("photoUrl");
@@ -62,10 +64,8 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
       setServerError("");
       const result = await onSubmit(data);
       
-      if (result && (result.photoName || result.avatarUrl)) {
-        const photoName = result.photoName || result.avatarUrl?.split('/').pop();
-        setValue("photoName", photoName);
-        setValue("photoUrl", `/api/media/avatar/${photoName}`);
+      if (result && result.avatarUrl) {
+        setValue("photoUrl", result.avatarUrl);
         setValue("photoFile", null);
       }
     } catch (err) {

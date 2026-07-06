@@ -11,6 +11,7 @@ import Select from "../../components/ui/Select";
 import { useTableTools } from "../../hooks/useTableTools";
 import {
   getOperarios,
+  getOperario,
   createOperario,
   updateOperario,
   updateOperarioRole,
@@ -28,6 +29,11 @@ export default function OperariosPage() {
   const [editing, setEditing] = useState(null);
   const [deleting, setDeleting] = useState(null);
   const [activating, setActivating] = useState(null);
+
+  // Log cuando cambia editing
+  useEffect(() => {
+    console.log('[OperariosPage] editing cambió a:', editing);
+  }, [editing]);
 
   // El Hook ahora SOLO se encarga de la ordenación de columnas en el cliente.
   // Pasamos un array vacío [] porque los campos de filtrado ya los procesa el Backend.
@@ -56,18 +62,14 @@ export default function OperariosPage() {
     if (statusFilter === "inactive") queryParams.active = false;
 
     try {
-      // Consume el endpoint: /user/users?search=...&active=...
+      // Consume el endpoint: /users?search=...&active=...
       const data = await getOperarios(queryParams);
+      console.log('[OperariosPage] Datos recibidos del backend:', data);
       
-      // Enriquecemos los datos para que el formulario sepa dónde buscar la imagen física
-      const mapped = data.map(op => ({
-        ...op,
-        // Si photoUrl ya viene del backend (como /api/media/avatar/xxx), lo usamos. 
-        // Si no, lo construimos si photoName existe.
-        photoUrl: op.photoUrl || (op.photoName ? `/api/media/avatar/${op.photoName}` : null)
-      }));
+      // El backend devuelve photoUrl directamente en UserResponseDTO, no necesitamos mapeo
+      console.log('[OperariosPage] Datos sin cambios:', data);
 
-      setOperarios(mapped);
+      setOperarios(data);
     } catch (error) {
       console.error("Error al consultar los operarios en OpenBread:", error);
     } finally {
@@ -128,7 +130,15 @@ export default function OperariosPage() {
       // 4. Si hay una foto en cola, la subimos
       let updatedUser = null;
       if (data.photoFile && userId) {
-        updatedUser = await uploadOperarioAvatar(userId, data.photoFile);
+        console.log('[OperariosPage handleSave] Subiendo foto del usuario:', userId);
+        const uploadResponse = await uploadOperarioAvatar(userId, data.photoFile);
+        console.log('[OperariosPage handleSave] Respuesta de upload:', uploadResponse);
+        
+        // Verificamos inmediatamente que la foto se guardó en el usuario
+        console.log('[OperariosPage handleSave] Verificando que photoUrl se guardó...');
+        const verifiedUser = await getOperario(userId);
+        console.log('[OperariosPage handleSave] Usuario verificado:', verifiedUser);
+        updatedUser = verifiedUser;
       }
 
       setEditing(null);
