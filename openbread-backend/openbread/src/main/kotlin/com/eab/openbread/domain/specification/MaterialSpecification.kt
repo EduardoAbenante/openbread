@@ -1,5 +1,6 @@
 package com.eab.openbread.domain.specification
 
+import com.eab.openbread.domain.model.MaterialCategory
 import com.eab.openbread.domain.model.RawMaterial
 import org.springframework.data.jpa.domain.Specification
 
@@ -10,11 +11,17 @@ object MaterialSpecification {
                 cb.conjunction()
             } else {
                 val queryLower = cb.literal("%${searchTerm.lowercase()}%")
-
                 val pName = cb.like(cb.lower(root.get("name")), queryLower)
-                val pCategoryId = cb.equal(root.get<Long>("categoryId"), searchTerm.toLongOrNull())
-
-                cb.or(pName, pCategoryId)
+                val categoryId = searchTerm.toLongOrNull()
+                if (categoryId != null) {
+                    val pCategoryId = cb.equal(
+                        root.get<MaterialCategory>("category").get<Long>("id"),
+                        categoryId
+                    )
+                    cb.or(pName, pCategoryId)
+                } else {
+                    pName
+                }
             }
         }
     }
