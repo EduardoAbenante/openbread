@@ -37,8 +37,15 @@ class SecurityConfig(
         http
             .csrf { it.disable() }
             .cors { it.configurationSource(corsConfigurationSource()) }
-            .authorizeHttpRequests { auth ->
-                auth.requestMatchers("/auth/login").permitAll()
+            .authorizeHttpRequests { auth -> auth.requestMatchers(
+                "/auth/login",
+                "/swagger-ui.html",
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/swagger-resources/**",
+                "/webjars/**"
+            ).permitAll()
+
                 auth.anyRequest().authenticated()
             }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)

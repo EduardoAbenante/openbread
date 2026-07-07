@@ -20,12 +20,19 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import io.swagger.v3.oas.annotations.tags.Tag
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.Parameter
 
 @RestController
 @RequestMapping("/users")
+@Tag(name = "User Management", description = "APIs for managing users")
 class UserController(
     private val userService: UserService
 ) {
+    @Operation(summary = "Create a new user", description = "Creates a new user with the provided details.")
+    @ApiResponse(responseCode = "200", description = "User created successfully")
     @PostMapping
     fun createUser(
         @Valid @RequestBody user: UserCreateDTO,
@@ -34,54 +41,69 @@ class UserController(
         return ResponseEntity.ok(newUserId)
     }
 
+    @Operation(summary = "List users", description = "Retrieves a list of users, optionally filtered by search criteria and active status.")
+    @ApiResponse(responseCode = "200", description = "List of users retrieved successfully")
     @GetMapping
     fun listUsers(
+        @Parameter(description = "Search term to filter users by name or email", required = false)
         @RequestParam(required = false) search: String?,
+
+        @Parameter(description = "Filter users by active status", required = false)
         @RequestParam(required = false) active: Boolean?
     ): ResponseEntity<List<UserResponseDTO>> {
         val users = userService.findUsers(search, active)
         return ResponseEntity.ok(users)
     }
 
+    @Operation(summary = "Get user by ID", description = "Retrieves a user by their unique ID.")
+    @ApiResponse(responseCode = "200", description = "User retrieved successfully")
     @PutMapping("/{id}")
     fun updateUser(
-        @PathVariable id: Long,
+        @Parameter(description = "ID of the user to update", required = true) @PathVariable id: Long,
         @Valid @RequestBody  dto: UserUpdateDTO,
     ): ResponseEntity<Long> {
         val updatedId = userService.updateUser(id, dto)
         return ResponseEntity.ok(updatedId)
     }
 
+    @Operation(summary = "Update user role", description = "Updates the role of a user by their unique ID.")
+    @ApiResponse(responseCode = "200", description = "User role updated successfully")
     @PutMapping("/{id}/role")
     fun updateUserRole(
-        @PathVariable id: Long,
+        @Parameter(description = "ID of the user to update role", required = true) @PathVariable id: Long,
         @Valid @RequestBody  dto: UserRoleUpdateDTO,
     ): ResponseEntity<Long> {
         val updatedId = userService.updateUserRole(id, dto)
         return ResponseEntity.ok(updatedId)
     }
 
+    @Operation(summary = "Update user password", description = "Updates the password of a user by their unique ID.")
+    @ApiResponse(responseCode = "200", description = "User password updated successfully")
     @PutMapping("/{id}/password")
     fun updateUserPassword(
-        @PathVariable id: Long,
+        @Parameter(description = "ID of the user to update password", required = true) @PathVariable id: Long,
         @Valid @RequestBody  dto: UserPasswordUpdateDTO,
     ): ResponseEntity<Long> {
         val updatedId = userService.updateUserPassword(id, dto)
         return ResponseEntity.ok(updatedId)
     }
 
+    @Operation(summary = "Update user avatar", description = "Updates the avatar of a user by their unique ID.")
+    @ApiResponse(responseCode = "200", description = "User avatar updated successfully")
     @PostMapping("/{id}/avatar")
     fun updateUserAvatar(
-        @PathVariable id: Long,
-        @RequestParam("avatarFile") file: MultipartFile,
+        @Parameter(description = "ID of the user to update avatar", required = true) @PathVariable id: Long,
+        @Parameter(description = "Avatar file to upload", required = true) @RequestParam("avatarFile") file: MultipartFile,
     ): ResponseEntity<AvatarUploadResponseDTO> {
         val avatarUrl = userService.updateUploadedAvatar(id, file)
         return ResponseEntity.ok(AvatarUploadResponseDTO(avatarUrl = avatarUrl))
     }
 
+    @Operation(summary = "Delete user", description = "Deletes a user by their unique ID. Requires authentication.")
+    @ApiResponse(responseCode = "204", description = "User deleted successfully")
     @DeleteMapping("/{id}")
     fun deleteUser(
-        @PathVariable id: Long,
+        @Parameter(description = "ID of the user to delete", required = true) @PathVariable id: Long,
         authentication: Authentication
     ): ResponseEntity<Void> {
         val currentUserEmail = authentication.principal as String
@@ -89,8 +111,11 @@ class UserController(
         return ResponseEntity.noContent().build()
     }
 
+    @Operation(summary = "Activate user", description = "Activates a user by their unique ID.")
+    @ApiResponse(responseCode = "200", description = "User activated successfully")
     @PutMapping("/{id}/activate")
     fun activateUser(
+        @Parameter(description = "ID of the user to activate", required = true)
         @PathVariable id: Long
     ): ResponseEntity<Long> {
         val activatedUser = userService.activateUser(id)
