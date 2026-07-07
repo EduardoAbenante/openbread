@@ -4,7 +4,7 @@ import { useAsyncState } from "../../hooks/useAsyncState";
 import { getOperarios } from "./OperariosApi";
 
 export default function OperariosWidget() {
-    const { data: count, setData: setCount, loading, error, run } = useAsyncState(0);
+    const { data: count, loading, error, run } = useAsyncState(0);
 
     useEffect(() => {
         run(() => getOperarios({ active: true }).then((data) => Array.isArray(data) ? data.length : 0));
