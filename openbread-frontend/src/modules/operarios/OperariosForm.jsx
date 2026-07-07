@@ -4,6 +4,7 @@ import { ImageUploadZone } from '../../components/common/ImageUploadZone';
 import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
 import Select from "../../components/ui/Select";
+import { getPasswordHelper, getNifHelper, getNameHelper, getEmailHelper } from './operariosValidation';
 
 export default function OperariosForm({ initial, onSubmit, onCancel }) {
   const { register, handleSubmit, control, setValue, watch, formState: { errors } } = useForm({
@@ -26,35 +27,10 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
   const surname = watch("surname");
   const email = watch("email");
 
-  const getPasswordHelper = () => {
-    const requirements = [];
-    if (!password || password.length < 6) requirements.push("mín. 6 caracteres");
-    if (!password || !/[A-Z]/.test(password)) requirements.push("una mayúscula");
-    if (!password || !/\d/.test(password)) requirements.push("un número");
-    if (!password || !/[!@#$%^&*(),.?":{}|<>]/.test(password)) requirements.push("un carácter especial");
-    
-    if (requirements.length === 0) return "¡Contraseña segura!";
-    return "Falta: " + requirements.join(", ");
-  };
-
-  const getNifHelper = () => {
-    if (initial.id) return "";
-    const nifRegex = /^[0-9XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
-    if (!nif || !nifRegex.test(nif)) return "Formato: 8 números y letra final (o X/Y/Z inicial)";
-    return "Formato válido";
-  };
-
-  const getNameHelper = (val) => {
-    if (val && /\d/.test(val)) return "No se permiten números";
-    return "Solo letras permitidas";
-  };
-
-  const getEmailHelper = (val) => {
-    if (initial.id) return "";
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-    if (!val || !emailRegex.test(val)) return "Ejemplo: usuario@dominio.com";
-    return "Formato correcto";
-  };
+  const passwordHint = getPasswordHelper(password);
+  const nifHint = getNifHelper(nif, !!initial.id);
+  const nameHint = getNameHelper(name);
+  const emailHint = getEmailHelper(email, !!initial.id);
 
   const onFormSubmit = async (data) => {
     try {
@@ -107,7 +83,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
                 }
               })}
               error={errors.nif?.message}
-              helperText={getNifHelper()}
+              helperText={nifHint}
               disabled={!!initial.id} 
             />
 
@@ -135,7 +111,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
                 }
               })}
               error={errors.name?.message}
-              helperText={getNameHelper(name)}
+              helperText={nameHint}
             />
 
             {/* APELLIDOS */}
@@ -167,7 +143,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
                 }
               })}
               error={errors.email?.message}
-              helperText={getEmailHelper(email)}
+              helperText={emailHint}
               disabled={!!initial.id} 
             />
 
@@ -190,7 +166,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
                 }
               })}
               error={errors.password?.message}
-              helperText={getPasswordHelper()}
+              helperText={passwordHint}
             />
 
             {/* TELÉFONO */}
@@ -207,7 +183,7 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
               id="op-postal" 
               label="Código postal" 
               {...register("postalCode")}
-              helperText="Formato: 5 números"
+              helperText="Mínimo 5 números"
             />
           </div>
 

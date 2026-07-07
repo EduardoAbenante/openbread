@@ -20,6 +20,7 @@ import {
   activateOperario,
   deleteOperario
 } from "../../modules/operarios/OperariosApi";
+import { buildOperarioPayload, createNewOperarioForm } from "../../modules/operarios/operariosLogic";
 
 export default function OperariosPage() {
   const [operarios, setOperarios] = useState([]);
@@ -71,18 +72,7 @@ export default function OperariosPage() {
   }, [searchTerm, statusFilter, load]);
 
   const handleSave = async (data) => {
-    const payload = {
-      id: data.id,
-      nif: data.nif,
-      name: data.name || data.nombre,
-      surname: data.surname || data.apellido,
-      email: data.email,
-      password: data.password,
-      role: data.role,
-      phone: data.phone || data.telefono,
-      postalCode: data.postalCode || data.cp,
-      active: data.active
-    };
+    const payload = buildOperarioPayload(data);
 
     try {
       let userId = payload.id;
@@ -164,7 +154,7 @@ export default function OperariosPage() {
         <div className="flex justify-end mb-6">
           <Button 
             className="px-5 h-10 rounded-[0.5rem] shadow-[0_1px_2px_rgba(0,0,0,0.05)] hover:-translate-y-[1px]"
-            onClick={() => setEditing({ nif: "", name: "", surname: "", email: "", phone: "", postalCode: "", active: true })}
+            onClick={() => setEditing(createNewOperarioForm())}
           >
             Nuevo operario
           </Button>
