@@ -31,8 +31,9 @@ class JwtService(
     }
 
     fun validateToken(token: String): String {
-        val claims = Jwts.parser()
+        val claims = Jwts.parserBuilder()
             .setSigningKey(key)
+            .build()
             .parseClaimsJws(token)
             .body
 
