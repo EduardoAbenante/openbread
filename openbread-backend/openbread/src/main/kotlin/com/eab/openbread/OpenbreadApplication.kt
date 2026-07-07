@@ -11,3 +11,4 @@ class OpenbreadApplication
 fun main(args: Array<String>) {
 	SpringApplication.run(OpenbreadApplication::class.java, *args)
 }
+

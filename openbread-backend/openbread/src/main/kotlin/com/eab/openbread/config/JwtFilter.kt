@@ -29,7 +29,7 @@ class JwtFilter(
             val auth = UsernamePasswordAuthenticationToken(email, null, emptyList())
             SecurityContextHolder.getContext().authentication = auth
         }
-
         filterChain.doFilter(request, response)
     }
 }
+ 
