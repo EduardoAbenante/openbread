@@ -1,18 +1,16 @@
 import axios from "axios";
 
-export const BACKEND_URL = "http://localhost:8080"; 
+export const BACKEND_URL = "http://localhost:8080";
 
 const api = axios.create({
-  baseURL: BACKEND_URL, 
+  baseURL: BACKEND_URL,
 });
+
+const isPublicRoute = (url) => ["/auth/login"].some((route) => url?.includes(route));
 
 api.interceptors.request.use(
   (config) => {
-    // Enviar token en todas las rutas excepto las públicas
-    const publicRoutes = ['/auth/login'];
-    const isPublicRoute = publicRoutes.some(route => config.url?.includes(route));
-    
-    if (!isPublicRoute) {
+    if (!isPublicRoute(config.url)) {
       const token = localStorage.getItem("token");
       if (token) {
         config.headers = config.headers || {};
@@ -26,29 +24,14 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-
-  async (error) => {
-    const originalRequest = error.config;
-
-    // Si el token está caducado o no es válido (Spring Security suele lanzar 403 Forbidden)
+  (error) => {
     if (error.response?.status === 403) {
-      console.warn("Sesión inválida o token expirado. Cerrando sesión…");
-
-      // Evitar loops infinitos en reintentos
-      if (!originalRequest._retry) {
-        originalRequest._retry = true;
-      }
-
-      // Limpiar datos de sesión del navegador
       localStorage.removeItem("token");
-
-      // Redirigir de forma segura al login
-      window.location.href = "/login";
+      window.location.assign("/login");
     }
 
     return Promise.reject(error);
   }
 );
 
-// 3. Exportación por defecto de la instancia configurada
 export default api;

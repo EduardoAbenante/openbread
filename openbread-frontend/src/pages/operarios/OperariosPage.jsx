@@ -24,16 +24,9 @@ import {
 export default function OperariosPage() {
   const [operarios, setOperarios] = useState([]);
   const [loading, setLoading] = useState(false);
-  
-  // Estados para el control de ventanas modales
   const [editing, setEditing] = useState(null);
   const [deleting, setDeleting] = useState(null);
   const [activating, setActivating] = useState(null);
-
-  // Log cuando cambia editing
-  useEffect(() => {
-    console.log('[OperariosPage] editing cambió a:', editing);
-  }, [editing]);
 
   // El Hook ahora SOLO se encarga de la ordenación de columnas en el cliente.
   // Pasamos un array vacío [] porque los campos de filtrado ya los procesa el Backend.
@@ -47,28 +40,19 @@ export default function OperariosPage() {
     processedData: sortedOperarios
   } = useTableTools(operarios, []);
 
-  // Función de carga conectada al backend unificado (Smart Search remoto)
   const load = useCallback(async () => {
     setLoading(true);
     const queryParams = {};
-    
-    // Si hay texto en el buscador, lo mandamos al parámetro unificado 'search'
+
     if (searchTerm.trim() !== "") {
       queryParams.search = searchTerm.trim();
     }
-    
-    // Mapeamos el selector al parámetro dinámico 'active'
+
     if (statusFilter === "active") queryParams.active = true;
     if (statusFilter === "inactive") queryParams.active = false;
 
     try {
-      // Consume el endpoint: /users?search=...&active=...
       const data = await getOperarios(queryParams);
-      console.log('[OperariosPage] Datos recibidos del backend:', data);
-      
-      // El backend devuelve photoUrl directamente en UserResponseDTO, no necesitamos mapeo
-      console.log('[OperariosPage] Datos sin cambios:', data);
-
       setOperarios(data);
     } catch (error) {
       console.error("Error al consultar los operarios en OpenBread:", error);
@@ -86,9 +70,7 @@ export default function OperariosPage() {
     return () => clearTimeout(delayDebounce);
   }, [searchTerm, statusFilter, load]);
 
-  // Operaciones de persistencia CRUD
   const handleSave = async (data) => {
-    // Payload estructurado según los DTOs de Spring Boot (UserCreateDTO / UserUpdateDTO)
     const payload = {
       id: data.id,
       nif: data.nif,
@@ -106,47 +88,31 @@ export default function OperariosPage() {
       let userId = payload.id;
 
       if (payload.id) {
-        // EDICIÓN: Detección de cambios por campos específicos (Rol y Contraseña)
-        const initialUser = operarios.find(o => o.id === payload.id);
-        
-        // 1. Actualizar datos básicos (Nombre, Apellido, Teléfono, CP)
+        const initialUser = operarios.find((o) => o.id === payload.id);
         userId = await updateOperario(payload.id, payload);
 
-        // 2. Si el ROL ha cambiado, llamar al endpoint de rol
         if (initialUser && payload.role !== initialUser.role) {
           await updateOperarioRole(payload.id, payload.role);
         }
 
-        // 3. Si se ha introducido una contraseña, llamar al endpoint de password
         if (payload.password && payload.password.trim() !== "") {
           await updateOperarioPassword(payload.id, payload.password);
         }
-
       } else {
-        // CREACIÓN: Se crea el usuario con todo (el backend lo procesa en una llamada inicial)
         userId = await createOperario(payload);
       }
 
-      // 4. Si hay una foto en cola, la subimos
       let updatedUser = null;
       if (data.photoFile && userId) {
-        console.log('[OperariosPage handleSave] Subiendo foto del usuario:', userId);
-        const uploadResponse = await uploadOperarioAvatar(userId, data.photoFile);
-        console.log('[OperariosPage handleSave] Respuesta de upload:', uploadResponse);
-        
-        // Verificamos inmediatamente que la foto se guardó en el usuario
-        console.log('[OperariosPage handleSave] Verificando que photoUrl se guardó...');
-        const verifiedUser = await getOperario(userId);
-        console.log('[OperariosPage handleSave] Usuario verificado:', verifiedUser);
-        updatedUser = verifiedUser;
+        await uploadOperarioAvatar(userId, data.photoFile);
+        updatedUser = await getOperario(userId);
       }
 
       setEditing(null);
-      load(); // Recarga la cuadrícula
+      await load();
       return updatedUser;
     } catch (error) {
       console.error("Error al guardar el operario o su avatar:", error);
-      // Lanza el error hacia el formulario para que el bloque catch de OperariosForm lo muestre en pantalla
       throw error;
     }
   };

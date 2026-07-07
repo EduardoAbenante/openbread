@@ -1,13 +1,16 @@
 import { create } from 'zustand';
 
-export const useAuthStore = create((set)=> ({
-  token: localStorage.getItem("token"), 
+const TOKEN_KEY = "token";
+const readToken = () => localStorage.getItem(TOKEN_KEY);
+
+export const useAuthStore = create((set) => ({
+  token: readToken(),
   setToken: (token) => {
-    localStorage.setItem("token", token); 
+    localStorage.setItem(TOKEN_KEY, token);
     set({ token });
   },
   logout: () => {
-    localStorage.removeItem("token"); 
+    localStorage.removeItem(TOKEN_KEY);
     set({ token: null });
   },
 }));

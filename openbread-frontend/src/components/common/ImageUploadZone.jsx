@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useAuthenticatedImage from '../../hooks/useAuthenticatedImage';
 
 export const ImageUploadZone = ({
@@ -11,17 +11,19 @@ export const ImageUploadZone = ({
   dimensionsText = "JPG, PNG o WEBP"
 }) => {
   const [isDragging, setIsDragging] = useState(false);
-  console.log('[ImageUploadZone] Renderizando. existingImageUrl=', existingImageUrl);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const { imageUrl: authenticatedUrl, loading } = useAuthenticatedImage(existingImageUrl);
-  console.log('[ImageUploadZone] authenticatedUrl=', authenticatedUrl, 'loading=', loading);
 
-  const previewUrl = useMemo(() => {
+  useEffect(() => {
     if (selectedFile) {
-      console.log('[ImageUploadZone useMemo] Usando archivo seleccionado');
-      return URL.createObjectURL(selectedFile);
+      const objectUrl = URL.createObjectURL(selectedFile);
+      setPreviewUrl(objectUrl);
+
+      return () => URL.revokeObjectURL(objectUrl);
     }
-    console.log('[ImageUploadZone useMemo] Usando authenticatedUrl:', authenticatedUrl);
-    return authenticatedUrl;
+
+    setPreviewUrl(authenticatedUrl);
+    return undefined;
   }, [selectedFile, authenticatedUrl]);
 
   const handleDragOver = (e) => {
@@ -36,18 +38,17 @@ export const ImageUploadZone = ({
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
-    
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const file = e.dataTransfer.files[0];
-      if (file.type.startsWith('image/')) {
-        onFileChange(file);
-      }
+
+    const file = e.dataTransfer.files?.[0];
+    if (file?.type.startsWith('image/')) {
+      onFileChange(file);
     }
   };
 
   const handleFileChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      onFileChange(e.target.files[0]);
+    const file = e.target.files?.[0];
+    if (file?.type.startsWith('image/')) {
+      onFileChange(file);
     }
   };
 

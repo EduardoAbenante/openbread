@@ -6,7 +6,6 @@ import Input from "../../components/ui/Input";
 import Select from "../../components/ui/Select";
 
 export default function OperariosForm({ initial, onSubmit, onCancel }) {
-  console.log('[OperariosForm] Renderizando con initial=', initial);
   const { register, handleSubmit, control, setValue, watch, formState: { errors } } = useForm({
     defaultValues: {
       ...initial,
@@ -19,8 +18,6 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
       photoUrl: initial.photoUrl || null
     }
   });
-  console.log('[OperariosForm] photoUrl del formulario=', initial.photoUrl);
-
   const [serverError, setServerError] = useState("");
   const photoUrl = watch("photoUrl");
   const password = watch("password");
