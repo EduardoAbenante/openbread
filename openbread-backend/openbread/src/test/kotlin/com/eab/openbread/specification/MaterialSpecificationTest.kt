@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest
-import org.springframework.data.jpa.domain.Specification
 import org.springframework.test.context.ActiveProfiles
 
 @DataJpaTest
@@ -25,15 +24,12 @@ class MaterialSpecificationTest {
 
     @BeforeEach
     fun setUp() {
-        // 1. Limpiamos en orden inverso por las claves foráneas
         repository.deleteAll()
         categoryRepository.deleteAll()
 
-        // 2. Creamos las categorías
         val cat1 = categoryRepository.save(MaterialCategory(name = "Harinas y Derivados"))
         val cat2 = categoryRepository.save(MaterialCategory(name = "Semillas y Granos"))
 
-        // 3. Insertamos los datos de prueba usando los objetos creados
         repository.save(RawMaterial(name = "Harina de Trigo", category = cat1, active = true))
         repository.save(RawMaterial(name = "Centeno Orgánico", category = cat2, active = true))
         repository.save(RawMaterial(name = "Sal Marina", category = cat1, active = false))
@@ -52,7 +48,6 @@ class MaterialSpecificationTest {
 
         @Test
         fun `deberia buscar por coincidencia parcial en el nombre sin importar mayusculas`() {
-            // Buscamos "cEnTe" para probar el lowerCase y el LIKE
             val spec = MaterialSpecification.smartSearch("cEnTe")
             val result = repository.findAll(spec)
 
@@ -62,22 +57,16 @@ class MaterialSpecificationTest {
 
         @Test
         fun `deberia buscar por ID de categoria si el termino es un numero valido`() {
-            // Obtenemos el ID real generado por H2 (que guardamos en el setUp)
-            // Para poder acceder a 'cat1', asegúrate de declararlo como propiedad de la clase o recuperarlo aquí.
-            val idRealCategoria = categoryRepository.findAll().first { it.name == "Harinas y Derivados" }.id
-
-            // 2. Pasamos ese ID real como String al buscador
-            val spec = MaterialSpecification.smartSearch(idRealCategoria.toString())
+            val idCategory = categoryRepository.findAll().first { it.name == "Harinas y Derivados" }.id
+            val spec = MaterialSpecification.smartSearch(idCategory.toString())
             val result = repository.findAll(spec)
 
-            // 3. Ahora la aserción pasará sin importar qué número de ID haya asignado la BD
             assertThat(result).hasSize(2)
             assertThat(result.map { it.name }).containsExactlyInAnyOrder("Harina de Trigo", "Sal Marina")
         }
 
         @Test
         fun `no deberia romper la query ni fallar si el termino de busqueda es texto puro y no puede convertirse a id`() {
-            // Probamos que "Harina" (que no es numérico) solo busque por nombre y no lance NumberFormatException en BD
             val spec = MaterialSpecification.smartSearch("Harina")
 
             val result = repository.findAll(spec)
@@ -88,7 +77,6 @@ class MaterialSpecificationTest {
 
         @Test
         fun `deberia devolver una lista vacia si el termino no coincide con ningun criterio`() {
-            // Probamos un término que ni es ID válido existente ni coincide con nombres
             val spec = MaterialSpecification.smartSearch("Levadura Inexistente")
             val result = repository.findAll(spec)
 
