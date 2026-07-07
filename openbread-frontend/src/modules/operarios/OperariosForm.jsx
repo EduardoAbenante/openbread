@@ -37,9 +37,13 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
       setServerError("");
       const result = await onSubmit(data);
 
-      if (result && result.avatarUrl) {
+      if (result?.avatarUrl) {
         setValue("photoUrl", result.avatarUrl);
         setValue("photoFile", null);
+      }
+
+      if (!result?.avatarUrl && !data.photoFile) {
+        onCancel();
       }
     } catch (err) {
       const serverMessage = err?.response?.data?.message || err?.response?.data?.error;

@@ -1,17 +1,18 @@
 import Card from "../../components/common/Card";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useAsyncState } from "../../hooks/useAsyncState";
 import { getOperarios } from "./OperariosApi";
 
 export default function OperariosWidget() {
-    const [count, setCount] = useState(0);
+    const { data: count, setData: setCount, loading, error, run } = useAsyncState(0);
 
     useEffect(() => {
-        getOperarios({ active: true }).then((data) => setCount(Array.isArray(data) ? data.length : 0));
-    }, []);
+        run(() => getOperarios({ active: true }).then((data) => Array.isArray(data) ? data.length : 0));
+    }, [run]);
 
     return (
         <Card title="Operarios activos">
-            <p>{count} operarios</p>
+            {loading ? <p>Cargando...</p> : error ? <p>{error}</p> : <p>{count} operarios</p>}
         </Card>
-    );  
+    );
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import Section from "../../components/common/Section";
+import { useAsyncState } from "../../hooks/useAsyncState";
 import Card from "../../components/common/Card";
 import OperariosTable from "../../modules/operarios/OperariosTable";
 import OperariosForm from "../../modules/operarios/OperariosForm";
@@ -23,8 +24,7 @@ import {
 import { buildOperarioPayload, createNewOperarioForm } from "../../modules/operarios/operariosLogic";
 
 export default function OperariosPage() {
-  const [operarios, setOperarios] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const { data: operarios, setData: setOperarios, loading, error, run } = useAsyncState([]);
   const [editing, setEditing] = useState(null);
   const [deleting, setDeleting] = useState(null);
   const [activating, setActivating] = useState(null);
@@ -41,9 +41,8 @@ export default function OperariosPage() {
     processedData: sortedOperarios
   } = useTableTools(operarios, []);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    const queryParams = {};
+  const load = useCallback(async (nextQuery = {}) => {
+    const queryParams = { ...nextQuery };
 
     if (searchTerm.trim() !== "") {
       queryParams.search = searchTerm.trim();
@@ -53,23 +52,22 @@ export default function OperariosPage() {
     if (statusFilter === "inactive") queryParams.active = false;
 
     try {
-      const data = await getOperarios(queryParams);
-      setOperarios(data);
+      const data = await run(() => getOperarios(queryParams));
+      setOperarios(Array.isArray(data) ? data : []);
+      return data;
     } catch (error) {
       console.error("Error al consultar los operarios en OpenBread:", error);
-    } finally {
-      setLoading(false);
+      return [];
     }
-  }, [searchTerm, statusFilter]);
+  }, [run, searchTerm, statusFilter, setOperarios]);
 
-  // EFFECT CON DEBOUNCE: Espera 300ms desde que el usuario deja de escribir antes de llamar a la API
   useEffect(() => {
-    const delayDebounce = setTimeout(() => {
+    const delayDebounce = window.setTimeout(() => {
       load();
     }, 300);
 
-    return () => clearTimeout(delayDebounce);
-  }, [searchTerm, statusFilter, load]);
+    return () => window.clearTimeout(delayDebounce);
+  }, [searchTerm, statusFilter]);
 
   const handleSave = async (data) => {
     const payload = buildOperarioPayload(data);
@@ -94,11 +92,10 @@ export default function OperariosPage() {
 
       userId = resolveUserId(userId);
 
-      let updatedUser = null;
       if (data.photoFile && userId) {
         try {
           const avatarResult = await uploadOperarioAvatar(userId, data.photoFile);
-          updatedUser = avatarResult?.avatarUrl ? { avatarUrl: avatarResult.avatarUrl } : null;
+          return avatarResult?.avatarUrl ? { avatarUrl: avatarResult.avatarUrl } : null;
         } catch (avatarError) {
           console.error("Error al subir la foto del operario:", avatarError);
         }
@@ -106,7 +103,7 @@ export default function OperariosPage() {
 
       setEditing(null);
       await load();
-      return updatedUser;
+      return null;
     } catch (error) {
       console.error("Error al guardar el operario o su avatar:", error);
       throw error;
@@ -116,7 +113,7 @@ export default function OperariosPage() {
   const handleDelete = async () => {
     await deleteOperario(deleting.id);
     setDeleting(null);
-    load();
+    await load();
   };
 
   const handleActivateClick = (operario) => {
@@ -126,7 +123,7 @@ export default function OperariosPage() {
   const handleActivateConfirm = async () => {
     await activateOperario(activating.id);
     setActivating(null);
-    load();
+    await load();
   };
 
   return (
@@ -169,6 +166,10 @@ export default function OperariosPage() {
         {loading ? (
           <div className="text-center p-10 text-[var(--color-primary)] font-medium">
               Filtrando en servidor...
+          </div>
+        ) : error ? (
+          <div className="text-center p-10 text-[#b00020] font-medium">
+            {error}
           </div>
         ) : (
           <OperariosTable

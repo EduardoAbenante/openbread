@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { login } from "../../api/authApi";
 import { useAuthStore } from "../../store/authStore";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import { useAsyncState } from "../../hooks/useAsyncState";
 import "./login.css";
 
 export default function LoginPage() {
@@ -9,12 +10,12 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const { error, setError, loading, run } = useAsyncState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = await login(email, password);
+      const token = await run(() => login(email, password));
       setToken(token);
       navigate("/app/dashboard");
     } catch {
@@ -41,7 +42,7 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit">Iniciar sesión</button>
+          <button type="submit" disabled={loading}>{loading ? "Entrando..." : "Iniciar sesión"}</button>
         </form>
         {error && <p className="error">{error}</p>}
         <a href="/forgot-password" className="forgot-link">
