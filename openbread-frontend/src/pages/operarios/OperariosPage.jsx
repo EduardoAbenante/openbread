@@ -11,14 +11,14 @@ import Select from "../../components/ui/Select";
 import { useTableTools } from "../../hooks/useTableTools";
 import {
   getOperarios,
-  getOperario,
   createOperario,
   updateOperario,
   updateOperarioRole,
   updateOperarioPassword,
   uploadOperarioAvatar,
   activateOperario,
-  deleteOperario
+  deleteOperario,
+  resolveUserId,
 } from "../../modules/operarios/OperariosApi";
 import { buildOperarioPayload, createNewOperarioForm } from "../../modules/operarios/operariosLogic";
 
@@ -92,10 +92,16 @@ export default function OperariosPage() {
         userId = await createOperario(payload);
       }
 
+      userId = resolveUserId(userId);
+
       let updatedUser = null;
       if (data.photoFile && userId) {
-        await uploadOperarioAvatar(userId, data.photoFile);
-        updatedUser = await getOperario(userId);
+        try {
+          const avatarResult = await uploadOperarioAvatar(userId, data.photoFile);
+          updatedUser = avatarResult?.avatarUrl ? { avatarUrl: avatarResult.avatarUrl } : null;
+        } catch (avatarError) {
+          console.error("Error al subir la foto del operario:", avatarError);
+        }
       }
 
       setEditing(null);

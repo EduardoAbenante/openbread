@@ -36,17 +36,17 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
     try {
       setServerError("");
       const result = await onSubmit(data);
-      
+
       if (result && result.avatarUrl) {
         setValue("photoUrl", result.avatarUrl);
         setValue("photoFile", null);
       }
     } catch (err) {
-      const serverMessage = err.response?.data?.message || err.response?.data?.error;
-      const validationErrors = err.response?.data?.errors 
-        ? Object.entries(err.response.data.errors).map(([k, v]) => `${k}: ${v}`).join(", ") 
+      const serverMessage = err?.response?.data?.message || err?.response?.data?.error;
+      const validationErrors = err?.response?.data?.errors
+        ? Object.entries(err.response.data.errors).map(([k, v]) => `${k}: ${v}`).join(", ")
         : null;
-          
+
       setServerError(serverMessage || validationErrors || "Error inesperado al conectar con el servidor de OpenBread");
     }
   };

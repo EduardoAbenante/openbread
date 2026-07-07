@@ -6,7 +6,7 @@ export default function OperariosWidget() {
     const [count, setCount] = useState(0);
 
     useEffect(() => {
-        getOperarios().then((data) => setCount(data.length));
+        getOperarios({ active: true }).then((data) => setCount(Array.isArray(data) ? data.length : 0));
     }, []);
 
     return (
