@@ -58,7 +58,7 @@ class UserControllerTest @Autowired constructor(
 
         every { userService.createUser(any()) } returns expectedId
 
-        mockMvc.post("/users") {
+        mockMvc.post("/api/users") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(userDTO)
         }.andExpect {
@@ -88,7 +88,7 @@ class UserControllerTest @Autowired constructor(
 
         every { userService.findUsers("Pepe", true) } returns mockUsers
 
-        mockMvc.get("/users") {
+        mockMvc.get("/api/users") {
             param("search", "Pepe")
             param("active", "true")
         }.andExpect {
@@ -115,7 +115,7 @@ class UserControllerTest @Autowired constructor(
 
         every { userService.updateUploadedAvatar(userId, any()) } returns fakeAvatarUrl
 
-        mockMvc.multipart("/users/$userId/avatar") {
+        mockMvc.multipart("/api/users/$userId/avatar") {
             file(mockFile)
         }.andExpect {
             status { isOk() }
@@ -138,7 +138,7 @@ class UserControllerTest @Autowired constructor(
 
         every { userService.deleteUser(userId, emailUser) } returns Unit
 
-        mockMvc.delete("/users/$userId") {
+        mockMvc.delete("/api/users/$userId") {
             principal = fakeAuthentication
         }.andExpect {
             status { isNoContent() }
@@ -151,7 +151,7 @@ class UserControllerTest @Autowired constructor(
     fun `listUsers deberia ser capturado por el GlobalExceptionHandler y retornar 404 cuando el recurso no existe`() {
         every { userService.findUsers(any(), any()) } throws ResourceNotFoundException("error.user.not_found")
 
-        mockMvc.get("/users")
+        mockMvc.get("/api/users")
             .andExpect {
                 status { isNotFound() }
                 jsonPath("$.message") { exists() }
@@ -168,7 +168,7 @@ class UserControllerTest @Autowired constructor(
 
         every { userService.createUser(any()) } throws DuplicateResourceException("error.user.duplicate")
 
-        mockMvc.post("/users") {
+        mockMvc.post("/api/users") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(userDTO)
         }.andExpect {
