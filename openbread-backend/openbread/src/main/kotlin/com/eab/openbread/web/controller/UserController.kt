@@ -7,6 +7,10 @@ import com.eab.openbread.web.dto.user.UserPasswordUpdateDTO
 import com.eab.openbread.web.dto.user.UserResponseDTO
 import com.eab.openbread.web.dto.user.UserRoleUpdateDTO
 import com.eab.openbread.web.dto.user.UserUpdateDTO
+import com.eab.openbread.web.openapi.ApiConflictError
+import com.eab.openbread.web.openapi.ApiNotFoundError
+import com.eab.openbread.web.openapi.ApiStandardErrors
+import com.eab.openbread.web.openapi.ApiValidationError
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
@@ -33,6 +37,8 @@ class UserController(
 ) {
     @Operation(summary = "Create a new user", description = "Creates a new user with the provided details.")
     @ApiResponse(responseCode = "200", description = "User created successfully")
+    @ApiValidationError
+    @ApiConflictError
     @PostMapping
     fun createUser(
         @Valid @RequestBody user: UserCreateDTO,
@@ -55,12 +61,13 @@ class UserController(
         return ResponseEntity.ok(users)
     }
 
-    @Operation(summary = "Get user by ID", description = "Retrieves a user by their unique ID.")
-    @ApiResponse(responseCode = "200", description = "User retrieved successfully")
+    @Operation(summary = "Update user", description = "Updates a user by their unique ID.")
+    @ApiResponse(responseCode = "200", description = "User updated successfully")
+    @ApiStandardErrors
+    @ApiConflictError
     @PutMapping("/{id}")
     fun updateUser(
-        @Parameter(description = "ID of the user to update", required = true) @PathVariable id: Long,
-        @Valid @RequestBody  dto: UserUpdateDTO,
+        @Parameter(description = "ID of the user to update", required = true) @PathVariable id: Long, @Valid @RequestBody dto: UserUpdateDTO,
     ): ResponseEntity<Long> {
         val updatedId = userService.updateUser(id, dto)
         return ResponseEntity.ok(updatedId)
@@ -68,10 +75,11 @@ class UserController(
 
     @Operation(summary = "Update user role", description = "Updates the role of a user by their unique ID.")
     @ApiResponse(responseCode = "200", description = "User role updated successfully")
+    @ApiStandardErrors
     @PutMapping("/{id}/role")
     fun updateUserRole(
         @Parameter(description = "ID of the user to update role", required = true) @PathVariable id: Long,
-        @Valid @RequestBody  dto: UserRoleUpdateDTO,
+        @Valid @RequestBody dto: UserRoleUpdateDTO,
     ): ResponseEntity<Long> {
         val updatedId = userService.updateUserRole(id, dto)
         return ResponseEntity.ok(updatedId)
@@ -79,10 +87,11 @@ class UserController(
 
     @Operation(summary = "Update user password", description = "Updates the password of a user by their unique ID.")
     @ApiResponse(responseCode = "200", description = "User password updated successfully")
+    @ApiStandardErrors
     @PutMapping("/{id}/password")
     fun updateUserPassword(
         @Parameter(description = "ID of the user to update password", required = true) @PathVariable id: Long,
-        @Valid @RequestBody  dto: UserPasswordUpdateDTO,
+        @Valid @RequestBody dto: UserPasswordUpdateDTO,
     ): ResponseEntity<Long> {
         val updatedId = userService.updateUserPassword(id, dto)
         return ResponseEntity.ok(updatedId)
@@ -90,6 +99,7 @@ class UserController(
 
     @Operation(summary = "Update user avatar", description = "Updates the avatar of a user by their unique ID.")
     @ApiResponse(responseCode = "200", description = "User avatar updated successfully")
+    @ApiNotFoundError
     @PostMapping("/{id}/avatar")
     fun updateUserAvatar(
         @Parameter(description = "ID of the user to update avatar", required = true) @PathVariable id: Long,
@@ -101,6 +111,8 @@ class UserController(
 
     @Operation(summary = "Delete user", description = "Deletes a user by their unique ID. Requires authentication.")
     @ApiResponse(responseCode = "204", description = "User deleted successfully")
+    @ApiValidationError
+    @ApiNotFoundError
     @DeleteMapping("/{id}")
     fun deleteUser(
         @Parameter(description = "ID of the user to delete", required = true) @PathVariable id: Long,
@@ -113,6 +125,7 @@ class UserController(
 
     @Operation(summary = "Activate user", description = "Activates a user by their unique ID.")
     @ApiResponse(responseCode = "200", description = "User activated successfully")
+    @ApiNotFoundError
     @PutMapping("/{id}/activate")
     fun activateUser(
         @Parameter(description = "ID of the user to activate", required = true)
@@ -121,6 +134,4 @@ class UserController(
         val activatedUser = userService.activateUser(id)
         return ResponseEntity.ok(activatedUser)
     }
-
-
 }

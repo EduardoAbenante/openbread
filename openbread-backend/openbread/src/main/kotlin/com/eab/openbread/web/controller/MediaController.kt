@@ -1,9 +1,11 @@
 package com.eab.openbread.web.controller
 
+import com.eab.openbread.web.openapi.ApiNotFoundError
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.media.Content
 import org.springframework.core.io.Resource
 import org.springframework.core.io.UrlResource
 import org.springframework.http.MediaType
@@ -25,8 +27,17 @@ class MediaController {
         summary = "Get media file",
         description = "Returns a media file from the uploads directory for a given entity and filename."
     )
-    @ApiResponse(responseCode = "200", description = "Media file retrieved successfully")
-    @ApiResponse(responseCode = "404", description = "Media file not found")
+    @ApiResponse(
+        responseCode = "200",
+        description = "Media file retrieved successfully",
+        content = [
+            Content(mediaType = MediaType.IMAGE_PNG_VALUE),
+            Content(mediaType = MediaType.IMAGE_JPEG_VALUE),
+            Content(mediaType = MediaType.APPLICATION_PDF_VALUE),
+            Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+        ]
+    )
+    @ApiNotFoundError
     @GetMapping("/{entity}/{filename:.+}")
     fun getMedia(
         @Parameter(description = "Entity folder name inside uploads.", required = true, example = "users")
