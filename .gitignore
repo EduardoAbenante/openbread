@@ -8,3 +8,4 @@ openbread-backend/.vscode/*
 .local
 .env.local
 openbread-backend/openbread/uploads/avatar/*
+openbread-uploads/*
