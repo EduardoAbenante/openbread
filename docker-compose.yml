@@ -19,13 +19,15 @@ services:
     ports:
       - "8080:8080"
     environment:
-      DB_URL: jdbc:postgresql://postgres-db:5432/openbread
-      DB_USERNAME: openbread
-      DB_PASSWORD: openbread
-      APP_UPLOAD_DIR: /home/springuser/uploads
+      - DB_URL=jdbc:postgresql://postgres-db:5432/openbread
+      - DB_USERNAME=openbread
+      - DB_PASSWORD=openbread
+      - APP_UPLOAD_DIR=/home/springuser/uploads
+      - app.upload.dir=/home/springuser/uploads
+    volumes:
+      - ./openbread-uploads:/home/springuser/uploads 
     depends_on:
       - postgres-db
 
 volumes:
   pgdata:
-    

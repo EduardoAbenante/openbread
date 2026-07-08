@@ -21,7 +21,7 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val config = CorsConfiguration()
-        config.allowedOrigins = listOf("http://localhost:5173")
+        config.allowedOrigins = listOf("http://localhost:5173", "http://localhost:8080")
         config.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
         config.allowedHeaders = listOf("*")
         config.allowCredentials = false
@@ -31,20 +31,28 @@ class SecurityConfig(
         return source
     }
 
-
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { it.disable() }
             .cors { it.configurationSource(corsConfigurationSource()) }
-            .authorizeHttpRequests { auth -> auth.requestMatchers(
-                "/auth/login",
-                "/swagger-ui.html",
-                "/swagger-ui/**",
-                "/v3/api-docs/**",
-                "/swagger-resources/**",
-                "/webjars/**"
-            ).permitAll()
+            .authorizeHttpRequests { auth ->
+                auth.requestMatchers(
+                    "/",
+                    "/index.html",
+                    "/assets/**",
+                    "/favicon.ico",
+                    "/*.js",
+                    "/*.css",
+                    "/*.json",
+
+                    "/auth/login",
+                    "/swagger-ui.html",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/swagger-resources/**",
+                    "/webjars/**"
+                ).permitAll()
 
                 auth.anyRequest().authenticated()
             }
