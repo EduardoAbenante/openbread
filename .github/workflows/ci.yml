@@ -91,6 +91,12 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Convertir repositorio a minúsculas
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        id: repo-string
+        run: |
+          echo "REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       
       - name: Construir Docker
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
