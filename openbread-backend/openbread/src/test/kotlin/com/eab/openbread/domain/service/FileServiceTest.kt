@@ -20,8 +20,9 @@ class FileServiceTest {
 
     @BeforeEach
     fun setUp() {
-        fileService = FileService()
-        ReflectionTestUtils.setField(fileService, "rootLocation", tempDir)
+        fileService = FileService(
+            uploadDir = tempDir.toString()
+        )
     }
 
     @Test
