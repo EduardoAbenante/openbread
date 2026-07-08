@@ -105,4 +105,4 @@ jobs:
          context: ./openbread-backend/openbread
          file: ./openbread-backend/openbread/Dockerfile
          push: true
-         tags: ghcr.io/${{ github.repository_owner }}/openbread-backend:latest
+         tags: ghcr.io/${{ env.REPO_LOWER }}/openbread-backend:latest
