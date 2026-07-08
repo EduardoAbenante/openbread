@@ -15,7 +15,7 @@ services:
   
   backend-app:
     image: ghcr.io/eduardoabenante/openbread/openbread-backend:latest
-    container_name: openbread-app
+    container_name: openbread-backend
     ports:
       - "8080:8080"
     environment:
@@ -23,11 +23,21 @@ services:
       - DB_USERNAME=openbread
       - DB_PASSWORD=openbread
       - APP_UPLOAD_DIR=/home/springuser/uploads
-      - app.upload.dir=/home/springuser/uploads
     volumes:
       - ./openbread-uploads:/home/springuser/uploads 
     depends_on:
       - postgres-db
+
+  frontend-app:
+    image: nginx:alpine
+    container_name: openbread-frontend
+    ports:
+      - "80:80" 
+    volumes:
+      - ./openbread-frontend/dist:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend-app
 
 volumes:
   pgdata:

@@ -15,7 +15,7 @@ import kotlin.math.log
 class FileService(
     @Value("\${app.upload.dir:./uploads}") private val uploadDir: String
 ) {
-    private val rootLocation = Paths.get(uploadDir).toAbsolutePath().normalize()
+    val rootLocation = Paths.get(uploadDir).toAbsolutePath().normalize()
     init {
         try {
             if (!Files.exists(rootLocation)) {

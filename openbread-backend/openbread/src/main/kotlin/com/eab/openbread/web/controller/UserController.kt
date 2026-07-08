@@ -30,7 +30,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.Parameter
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @Tag(name = "User Management", description = "APIs for managing users")
 class UserController(
     private val userService: UserService

@@ -1,15 +1,24 @@
-export const buildOperarioPayload = (data = {}) => ({
-  id: data.id,
-  nif: data.nif,
-  name: data.name || data.nombre,
-  surname: data.surname || data.apellido,
-  email: data.email,
-  password: data.password,
-  role: data.role,
-  phone: data.phone || data.telefono,
-  postalCode: data.postalCode || data.cp,
-  active: data.active,
-});
+export const buildOperarioPayload = (data = {}) => {
+  const payload = {
+    ...(data.id && data.id.toString().trim() !== "" ? { id: data.id } : {}),
+    nif: data.nif,
+    name: data.name || data.nombre,
+    surname: data.surname || data.apellido,
+    email: data.email,
+    role: data.role,
+    phone: data.phone || data.telefono || null, 
+    postalCode: data.postalCode || data.cp || null, 
+    active: data.active !== undefined ? data.active : true,
+  };
+
+  if (data.password && data.password.trim() !== "") {
+    payload.password = data.password;
+  } else {
+    delete payload.password;
+  }
+
+  return payload;
+};
 
 export const createNewOperarioForm = () => ({
   nif: '',

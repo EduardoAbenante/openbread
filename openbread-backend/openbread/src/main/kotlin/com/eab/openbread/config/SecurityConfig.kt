@@ -1,5 +1,6 @@
 package com.eab.openbread.config
 
+import jakarta.servlet.DispatcherType
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -21,7 +22,7 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val config = CorsConfiguration()
-        config.allowedOrigins = listOf("http://localhost:5173", "http://localhost:8080")
+        config.allowedOrigins = listOf("http://localhost", "http://localhost:5173")
         config.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
         config.allowedHeaders = listOf("*")
         config.allowCredentials = false
@@ -38,14 +39,6 @@ class SecurityConfig(
             .cors { it.configurationSource(corsConfigurationSource()) }
             .authorizeHttpRequests { auth ->
                 auth.requestMatchers(
-                    "/",
-                    "/index.html",
-                    "/assets/**",
-                    "/favicon.ico",
-                    "/*.js",
-                    "/*.css",
-                    "/*.json",
-
                     "/auth/login",
                     "/swagger-ui.html",
                     "/swagger-ui/**",

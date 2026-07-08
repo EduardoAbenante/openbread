@@ -92,18 +92,23 @@ export default function OperariosPage() {
 
       userId = resolveUserId(userId);
 
+      let avatarResponse = null;
+
       if (data.photoFile && userId) {
         try {
           const avatarResult = await uploadOperarioAvatar(userId, data.photoFile);
-          return avatarResult?.avatarUrl ? { avatarUrl: avatarResult.avatarUrl } : null;
+          if (avatarResult?.avatarUrl) {
+            avatarResponse = { avatarUrl: avatarResult.avatarUrl };
+          }
         } catch (avatarError) {
           console.error("Error al subir la foto del operario:", avatarError);
         }
       }
 
-      setEditing(null);
-      await load();
-      return null;
+      setEditing(null); 
+      await load(); 
+      
+      return avatarResponse; 
     } catch (error) {
       console.error("Error al guardar el operario o su avatar:", error);
       throw error;

@@ -13,12 +13,12 @@ export const createAvatarUploadRequest = (file) => {
 };
 
 export const getOperarios = async (params = {}) => {
-  const res = await api.get("/users", { params });
+  const res = await api.get("/api/users", { params });
   return res.data;
 };
 
 export const getOperario = async (id) => {
-  const res = await api.get(`/users/${id}`);
+  const res = await api.get(`/api/users/${id}`);
   return res.data;
 };
 
@@ -32,37 +32,37 @@ export const resolveUserId = (value) => {
 };
 
 export const createOperario = async (data) => {
-  const res = await api.post("/users", data);
+  const res = await api.post("/api/users", data);
   return resolveUserId(res.data);
 };
 
 export const updateOperario = async (id, data) => {
-  const res = await api.put(`/users/${id}`, data);
+  const res = await api.put(`/api/users/${id}`, data);
   return resolveUserId(res.data);
 };
 
 export const updateOperarioRole = async (id, role) => {
-  const res = await api.put(`/users/${id}/role`, { role });
+  const res = await api.put(`/api/users/${id}/role`, { role });
   return res.data;
 };
 
 export const updateOperarioPassword = async (id, password) => {
-  const res = await api.put(`/users/${id}/password`, { password });
+  const res = await api.put(`/api/users/${id}/password`, { password });
   return res.data;
 };
 
 export const uploadOperarioAvatar = async (id, file) => {
   const { formData, config } = createAvatarUploadRequest(file);
 
-  const res = await api.post(`/users/${id}/avatar`, formData, config);
+  const res = await api.post(`/api/users/${id}/avatar`, formData, config);
   return res.data;
 };
 
 export const activateOperario = async (id) => {
-  const res = await api.put(`/users/${id}/activate`);
+  const res = await api.put(`/api/users/${id}/activate`);
   return res.data;
 };
 
 export const deleteOperario = async (id) => {
-  await api.delete(`/users/${id}`);
+  await api.delete(`/api/users/${id}`);
 };

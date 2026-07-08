@@ -41,12 +41,10 @@ export default function OperariosForm({ initial, onSubmit, onCancel }) {
         setValue("photoUrl", result.avatarUrl);
         setValue("photoFile", null);
       }
-
-      if (!result?.avatarUrl && !data.photoFile) {
         onCancel();
-      }
+      
     } catch (err) {
-      const serverMessage = err?.response?.data?.message || err?.response?.data?.error;
+      const serverMessage = err?.response?.data?.message || err?.response?.data?.error || err?.message || err?.toString();
       const validationErrors = err?.response?.data?.errors
         ? Object.entries(err.response.data.errors).map(([k, v]) => `${k}: ${v}`).join(", ")
         : null;

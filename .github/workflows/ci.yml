@@ -5,7 +5,6 @@ on:
     branches: ["main"]
   pull_request:
 
-
 jobs:
   build-test:
     runs-on: ubuntu-latest
@@ -43,7 +42,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            ~/.gradle/caches
+            ~/??.gradle/caches
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('openbread-backend/openbread/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: |
@@ -63,15 +62,6 @@ jobs:
         working-directory: openbread-frontend
         run: npm ci
 
-      - name: Frontend - build
-        working-directory: openbread-frontend
-        run: npm run build
-
-      - name: Mover frontend a recursos estaticos de Backend
-        run: |
-          mkdir -p openbread-backend/openbread/src/main/resources/static
-          cp -r openbread-frontend/dist/* openbread-backend/openbread/src/main/resources/static/
-
       - name: Backend - test
         working-directory: openbread-backend/openbread
         env:
@@ -80,7 +70,7 @@ jobs:
             DB_PASSWORD: openbread
         run: ./gradlew test
 
-      - name: Backend - build
+      - name: Backend - build JAR
         working-directory: openbread-backend/openbread
         run: ./gradlew build -x test
 
@@ -98,11 +88,20 @@ jobs:
         run: |
           echo "REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       
-      - name: Construir Docker
+      - name: Construir y Publicar Backend Docker
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
-         context: ./openbread-backend/openbread
-         file: ./openbread-backend/openbread/Dockerfile
-         push: true
-         tags: ghcr.io/${{ env.REPO_LOWER }}/openbread-backend:latest
+          context: ./openbread-backend/openbread
+          file: ./openbread-backend/openbread/Dockerfile
+          push: true
+          tags: ghcr.io/${{ env.REPO_LOWER }}/openbread-backend:latest
+
+      - name: Construir y Publicar Frontend Docker 
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v5
+        with:
+          context: ./openbread-frontend
+          file: ./openbread-frontend/Dockerfile
+          push: true
+          tags: ghcr.io/${{ env.REPO_LOWER }}/openbread-frontend:latest
