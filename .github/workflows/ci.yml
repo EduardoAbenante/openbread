@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on:
   push:
@@ -24,6 +24,10 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
+    
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout
@@ -63,6 +67,11 @@ jobs:
         working-directory: openbread-frontend
         run: npm run build
 
+      - name: Mover frontend a recursos estaticos de Backend
+        run: |
+          mkdir -p openbread-backend/openbread/src/main/resources/static
+          cp -r openbread-frontend/dist/* openbread-backend/openbread/src/main/resources/static/
+
       - name: Backend - test
         working-directory: openbread-backend/openbread
         env:
@@ -74,3 +83,20 @@ jobs:
       - name: Backend - build
         working-directory: openbread-backend/openbread
         run: ./gradlew build -x test
+
+      - name: Iniciar sesión Container Registry
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Construir Docker
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v5
+        with:
+         context: ./openbread-backend/openbread
+         file: ./openbread-backend/openbread/Dockerfile
+         push: true
+         tags: ghcr.io/${{ github.repository_owner }}/openbread-backend:latest
