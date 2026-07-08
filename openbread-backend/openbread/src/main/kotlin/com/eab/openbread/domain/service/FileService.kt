@@ -1,6 +1,7 @@
 package com.eab.openbread.domain.service
 
 import com.eab.openbread.domain.exception.ResourceNotFoundException
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.IOException
@@ -11,12 +12,17 @@ import java.util.UUID
 import kotlin.math.log
 
 @Service
-class FileService {
-    private val rootLocation = Paths.get("uploads")
-
+class FileService(
+    @Value("\${app.upload.dir:./uploads}") private val uploadDir: String
+) {
+    private val rootLocation = Paths.get(uploadDir).toAbsolutePath().normalize()
     init {
-        if (!Files.exists(rootLocation)) {
-            Files.createDirectories(rootLocation)
+        try {
+            if (!Files.exists(rootLocation)) {
+                Files.createDirectories(rootLocation)
+            }
+        } catch (e: Exception) {
+            throw e
         }
     }
 
