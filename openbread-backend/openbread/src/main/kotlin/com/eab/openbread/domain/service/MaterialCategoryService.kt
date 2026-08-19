@@ -3,21 +3,22 @@ package com.eab.openbread.domain.service
 import com.eab.openbread.domain.exception.DuplicateResourceException
 import com.eab.openbread.domain.model.MaterialCategory
 import com.eab.openbread.domain.repository.MaterialCategoryRepository
+import com.eab.openbread.domain.specification.MaterialCategorySpecification
 import com.eab.openbread.web.dto.materialCategory.MaterialCategoryCreateDTO
 import com.eab.openbread.web.dto.materialCategory.MaterialCategoryResponseDTO
 import com.eab.openbread.web.dto.materialCategory.MaterialCategoryUpdateDTO
 import com.eab.openbread.web.dto.materialCategory.toDTO
 import com.eab.openbread.web.dto.materialCategory.toEntity
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.BeanRegistry
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 
 @Service
 class MaterialCategoryService(
     private val MaterialCategoryRepository: MaterialCategoryRepository
 ) {
-    //Create Read Update Delete
-
     private val logger = LoggerFactory.getLogger(MaterialCategoryService::class.java)
 
 
@@ -42,6 +43,16 @@ class MaterialCategoryService(
     fun getAllMaterialCategories(): List<MaterialCategoryResponseDTO> {
         logger.info("Fetching all material categories")
         return MaterialCategoryRepository.findAll().map { toDTO(it) }
+    }
+
+    fun findMaterialCategories(search: String?, active: Boolean?): List<MaterialCategoryResponseDTO> {
+        logger.info("Searching material categories with Smart Search: query='$search', active=$active")
+
+        val spec = Specification
+            .where ( MaterialCategorySpecification.smartSearch(search))
+            .and (MaterialCategorySpecification.withActiveStatus(active))
+
+        return MaterialCategoryRepository.findAll(spec).map { toDTO(it) }
     }
 
     fun updateMaterialCategory(id: Long, dto: MaterialCategoryUpdateDTO): Long {
